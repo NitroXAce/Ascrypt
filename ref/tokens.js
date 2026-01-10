@@ -24,6 +24,14 @@ module.exports = {
             },
         },
 
+        //numerical types
+        '0':{
+            'b':'num-binary-prefix-unop',
+            'o':'num-octal-prefix-unop',
+            'x':'num-hexical-prefix-unop',
+            'c':'num-custom-compressed-prefix-unop'
+        },
+
         //\s | \t | \n | \b | \e | \f | \v | \{ | \} | \\ | \x hex hex | \u hex hex hex hex
         //escape characters
         '\\':{
