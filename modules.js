@@ -1,7 +1,23 @@
-module.exports={
+function KeepOnly(){
+    delete this.__proto__;
+    this.properties = arguments[0];
+    this.arrKeep = arguments[1];
+    this.result = {};
 
-    splitter:function Splitter(){
-    this.__proto__ = null;
+    for (this.i in this.properties)
+        for(this.j in this.arrKeep)
+            if (this.i == this.arrKeep[this.j])
+                this.result[this.i] = this.properties[this.i];
+    delete this.properties;
+    delete this.arrKeep;
+    delete this.i;
+    delete this.j;
+    return this.result;
+}
+
+function Splitter(){
+    //this.__proto__ = null;
+    delete this.__proto__;
     this.stringy = arguments[0];
     this.splitter = arguments[1];
     this.matcher = arguments[2];
@@ -23,56 +39,49 @@ module.exports={
                 break;
             }
 
-    delete this.stringy;
-    delete this.splitter;
-    delete this.matcher;
-    delete this.hold;
-    delete this.i;
+    return new KeepOnly(this, ['result']).result;
+}
 
-    return this.result;
-    },
+function TokenSearch(){
+    this.__proto__= null;
+    this.result = undefined;
+    this.tokenObject = require('./ref/tokens.js').tokens;
+    this.tokenArray = arguments;
+    this.tokenKept = "";
+    this.obj = this.tokenObject;
+    this.i = -1;
 
-    tokenizer:function TokenSearch(){
-        this.__proto__= null;
-        this.result = undefined;
-        this.tokenObject = require('./ref/tokens.js').tokens;
-        this.tokenArray = arguments;
-        this.tokenKept = "";
-        this.obj = this.tokenObject;
-        this.i = -1;
-
-        while (++this.i < arguments.length) {
-            if (!!this.tokenObject[this.tokenArray[this.i]]) {
-                this.tokenKept += this.tokenArray[this.i];
-                this.tokenObject = this.tokenObject[this.tokenArray[this.i]];
-                
-                if (typeof this.tokenObject == "object") continue;
-                if (typeof this.tokenObject == "string") {
-                    this.result = {
-                        length: this.tokenKept.length,
-                        name: this.tokenObject,
-                        token: this.tokenKept
-                    };
-                    break;
-                }
-            }
-
-            if (!!this.tokenObject[""]){
+    while (arguments.length[++this.i]) {
+        if (!!this.tokenObject[this.tokenArray[this.i]]) {
+            this.tokenKept += this.tokenArray[this.i];
+            this.tokenObject = this.tokenObject[this.tokenArray[this.i]];
+            
+            if (typeof this.tokenObject == "object") continue;
+            if (typeof this.tokenObject == "string") {
                 this.result = {
                     length: this.tokenKept.length,
-                    name: this.tokenObject[""],
+                    name: this.tokenObject,
                     token: this.tokenKept
                 };
                 break;
             }
-            
         }
 
-        delete this.i;
-        delete this.obj;
-        delete this.tokenArray;
-        delete this.tokenKept;
-        delete this.tokenObject;
-        return this.result;
+        if (!!this.tokenObject[""]){
+            this.result = {
+                length: this.tokenKept.length,
+                name: this.tokenObject[""],
+                token: this.tokenKept
+            };
+            break;
+        }
+        
     }
+
+    return new KeepOnly(this, ['result']).result;
+}
+
+module.exports={
+    splitter:Splitter,
+    tokenSearch:TokenSearch
 }
