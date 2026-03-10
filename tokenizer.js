@@ -167,6 +167,10 @@ module.exports = {
         },
         b:{
             '':'letter-num-literal-hex',
+            i:{
+                '':'letter',
+                n: 'type-lex-assign-number-binary'
+            },
             o:{
                 '':'letter',
                 o:{
@@ -202,10 +206,16 @@ module.exports = {
                                 '':'letter',
                                 u:{
                                     '':'letter',
-                                    e:"type-lex-assign-assign-continue"
+                                    e:"type-lex-assign-continue"
                                 }}}
         }}},
-        d:'letter-num-literal-hex',
+        d:{
+            '':'letter-num-literal-hex',
+            e:{
+                '':'letter',
+                c:'type-lex-assign-decimal-number'
+            }
+        },
         e:{
             '':'letter-num-literal-hex',
             l:{
@@ -229,6 +239,13 @@ module.exports = {
             '':'letter-num-literal-hex',
             n:"type-lex-assign-function"
         },
+        h:{
+            '':'letter',
+            e:{
+                '':'letter',
+                x:'type-lex-assign-number-hexidecimal'
+            }
+        },
         i:{
             '':'letter',
             f:"word-lex-identifier-function",
@@ -246,6 +263,16 @@ module.exports = {
             b:{
                 '':'letter',
                 j:"type-lex-assign-object"
+            },
+            c:{
+                '':'letter',
+                t:{
+                    '':'letter',
+                    a:{
+                        '':'letter',
+                        l:'type-lex-assign-number-octal'
+                    }
+                }
             },
             f:"scope-lex-of"           
         },

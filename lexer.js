@@ -100,15 +100,12 @@ function TokenCrammer(){
     this.buffer = arguments[0];
     this.token = arguments[1];
     this.keyword = arguments[2];
-    if(new SplitCheck(this.token.name,'-',this.keyword)){
+    if(new SplitCheck(this.token.name,'-',this.keyword))
         if(
             typeof this.buffer[this.buffer.length-1]=='object' &&
             new SplitCheck(this.buffer[this.buffer.length-1].name,'-',this.keyword)
-        ){
-            this.buffer[this.buffer.length-1] = this.token;
-        }
-        this.buffer[this.buffer.length]=this.token;
-    }
+        ) this.buffer[this.buffer.length-1] = this.token;
+        else this.buffer[this.buffer.length]=this.token;
     return new KeepOnly(this, ['buffer']).buffer;
 }
 
