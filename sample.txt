@@ -1,6 +1,17 @@
+/*
+<type> 
+    <identifier> , 
+    <identifier> () {},
+    <identifier> (),
+    <identifier> [],
+    <identifier> {},
+    <identifier> x= somePrimitiveValue
+;
+*/
+
 const nonNegotiable = {
     str name = "steve";
-}
+};
 
 obj Obj {
     yeet {
@@ -8,6 +19,8 @@ obj Obj {
     };
 };
 
+
+//let Names:str = { boyName, girlName, parentSurname }
 str Names {
     boyName; girlName; parentSurname;
 };
@@ -42,10 +55,12 @@ Person Employees {
 };
 
 super Person {
-    num age;
+    num age = 18;
     bool isAdult() .age > 17;
     str name, lastName, says, family;
-} Employees {
+};
+
+Person Employees {
     Steve {
         .name = 'Steve';
         .lastName = 'Harvey';

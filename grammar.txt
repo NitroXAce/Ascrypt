@@ -85,7 +85,7 @@ child::
 TypePrimitive :: oneOf
     'void'
     'bool' 
-    ('num' | '0b' | '0o' | '0x' | '0c' )
+    ('num' | 'bin' | 'oct' | 'hex' )
     'str'
     'arr'
     'obj'
@@ -100,7 +100,11 @@ types::
 assign ::
     identifier (
         //value
-        '=' exp |
+        [ 
+            '&&' | '||' | '??' | '!' |
+            '+' | '-' | '*' | '/' | '%' | '^' |
+            '>>' | '<<' | '>>>' | '<<<' | '~'
+        ] '=' exp |
     
         //object
         '{' [ { assignment ';' } assignment ';' ] '}' |
@@ -143,10 +147,10 @@ literal ::
     numberLiteral |
     stringLiteral
 
-numerLiteral ::
-    '0b' { bin } |
-    '0c' { octal } |
-    '0x' { hex } |
+numberLiteral ::
+    { bin } |
+    { octal } |
+    { hex } |
     { digit } digit [ '.' { digit } digit ]
 
 bin :: oneOf

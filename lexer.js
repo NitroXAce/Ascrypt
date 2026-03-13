@@ -51,8 +51,8 @@ function SplitCheck() {
                     this.result = true,
                     new KeepOnly(this,['result']).result
                 );
-        new KeepOnly(this, ['result']);
         this.result = false;
+        return new KeepOnly(this, ['result']);
     }
     
     return new KeepOnly(this, ['hold']).hold;
@@ -62,38 +62,28 @@ function TokenSearch() {
     this.obj = require('./tokenizer').tokens;
     this.tokenArray = arguments;
     this.tokenObject = this.obj;
-    this.tokenKept = "";
     this.i = -1;
     this.result = undefined;
     
-    while (++this.i < this.tokenArray.length)
-        if (
-            typeof this.tokenObject[this.tokenArray[this.i]] != "undefined"
-        ) {
-            this.tokenKept += this.tokenArray[this.i];
+    while (++this.i < this.tokenArray.length){
+
+        if (typeof this.tokenObject[""] != "undefined")
+            return this.tokenObject[''];
+
+        if (typeof this.tokenObject[this.tokenArray[this.i]] != "undefined") {
             this.tokenObject = this.tokenObject[this.tokenArray[this.i]];
-            
-            if (typeof this.tokenObject == "object") continue;
-            if (typeof this.tokenObject == "string"){
-                this.result = {
-                    length: this.tokenKept.length,
-                    token: this.tokenKept,
-                    name: this.tokenObject
-                };
-                return new KeepOnly(this, ['result']).result;
-            }
+            if(
+                typeof this.tokenObject.token == 'string' &&
+                typeof this.tokenObject.def == 'string'
+            ) return this.tokenObject;
+            else continue;
         }
-        if (
-            typeof this.tokenObject[""] != "undefined"
-        ){
-            this.result = {
-                length: this.tokenKept.length,
-                token: this.tokenKept,
-                name: this.tokenObject[""]
-            };
-            return new KeepOnly(this, ['result']).result;    
-        }
-    return new KeepOnly(this, ['result']).result;    
+
+        return {
+            token: this.tokenArray[this.i],
+            def:'char'
+        };
+    } 
 }
 
 function TokenCrammer(){
@@ -118,24 +108,11 @@ function CharLexer(){
     this.pos        = 0;
     while(++this.i<this.end){
         this.charToken = new TokenSearch(this.src);
-
-        if(!this.charToken){
-            this.charToken={
-                length:1,
-                name:'char',
-                token:this.src[this.i]
-            };
-            this.buffer[this.buffer.length]= this.charToken;
-            this.src.shift();
-            this.end = this.src.length;
-            continue;
-        }
-
-        this.buffer[this.buffer.length]= this.charToken;
-        this.i+=this.charToken.length;
-        for(this.j = -1; ++this.j < this.charToken.length;)
-            this.src.shift();
-        this.end = this.src.length;
+        this.buffer[this.bufferLength] = this.charToken;
+        for(
+            this.consume = -1;
+            ++this.consume < this.charToken.token.length;
+        ) this.src.shift();
     }
 
     
@@ -148,4 +125,32 @@ function CharLexer(){
 
 module.exports={
     CharLexer, SplitCheck, KeepOnly, TokenSearch
+}
+
+
+class Lexer {
+    tokens = [];
+    tokenType = {};
+    tokenStart = -1;
+    tokenEnd = 0;
+    currentLine = 0;
+    currentCol = 0;
+    
+    constructor(buffer){
+        this.buffer = buffer ?? '';
+    }
+
+    advance(){
+        if (this.tokenEnd == this.buffer.length)
+            return false;
+
+        this.tokenStart = this.tokenEnd;
+        const directorChar = this.buffer[this.tokenStart];
+        switch(directorChar){
+
+        }
+
+        return true;
+    }
+
 }
