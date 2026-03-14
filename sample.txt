@@ -1,14 +1,3 @@
-/*
-<type> 
-    <identifier> , 
-    <identifier> () {},
-    <identifier> (),
-    <identifier> [],
-    <identifier> {},
-    <identifier> x= somePrimitiveValue
-;
-*/
-
 const nonNegotiable = {
     str name = "steve";
 };
