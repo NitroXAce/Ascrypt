@@ -1,0 +1,120 @@
+/*
+<type> 
+    <identifier> , 
+    <identifier> () {},
+    <identifier> (),
+    <identifier> [],
+    <identifier> {},
+    <identifier> x= somePrimitiveValue
+;
+*/
+
+const nonNegotiable = {
+    str name = "steve";
+};
+
+obj Obj {
+    yeet {
+        str yeeted = 'I scream';
+    };
+};
+
+
+//let Names:str = { boyName, girlName, parentSurname }
+str Names {
+    boyName; girlName; parentSurname;
+};
+
+obj Person1 {
+    num age = 22;
+    str 
+        name = 'Stacy',
+        lastName = 'Harvey',
+        says() "Hi, my name is { .name }";
+        /* says(){
+            return "Hi, my name is \{ .name \}";
+        };*/
+};
+
+super Person {
+    num age;
+    bool isAdult() .age > 17;
+    str name, lastName, says, family;
+};
+
+Person Employees {
+    Steve {
+        .name = 'Steve';
+        .lastName = 'Harvey';
+    };
+    Stacy {
+        .age = 22;
+        .name = 'Stacy';
+        .lastName = 'Studier';
+    };
+};
+
+super Person {
+    num age = 18;
+    bool isAdult() .age > 17;
+    str name, lastName, says, family;
+};
+
+Person Employees {
+    Steve {
+        .name = 'Steve';
+        .lastName = 'Harvey';
+    };
+    Stacy {
+        .age = 22;
+        .name = 'Stacy';
+        .lastName = 'Studier';
+    };
+};
+
+
+obj Employees {
+    Person 
+        Steve {
+            .age = 44;
+            .name = 'Steve';
+            .lastName = 'Harvey';
+        },
+        Stacy {
+            .age = 22;
+            .name = 'Stacy';
+            .lastName = 'Studier';
+        }
+    ;
+};
+
+Person Employees [
+    {
+        .name = 'Steve';
+        .age = 44;
+        .lastName = 'Harvey';
+    },
+    {
+        .age = 22;
+        .name = 'Stacy';
+        .lastName = 'Studier';
+    }
+];
+
+str scream(){
+    return 'HELLO WORLD!';
+};
+
+arr listOfs [
+    44, 'yeety'
+];
+
+str listOfNames [
+    'Steve', 'Stacy'
+];
+
+str complex(num i){
+    return if(!(i % 3)) 'is divisible by 3';
+    else if(!(i % 2)) 'is divisible by 2';
+    else 'this number is divisible outside of 2 and 3';
+};

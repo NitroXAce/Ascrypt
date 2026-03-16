@@ -1,0 +1,182 @@
+-------------------------------
+lets get started with an example and see what the lang looks like
+
+itll take a major inspiration of C
+
+num area(num input, num iteration){
+    return input * iteration;  
+}
+
+--------------------------------
+
+file :: 
+    statements EOF
+
+block ::
+    exp | 
+    '{' statements '}' |
+    '(' { exp ',' } [ exp ] ')'
+
+statements ::
+    { statement ';' } [
+        'break' |
+        'continue' |
+        'return' statement 
+    ';' ] 
+
+statement ::
+    exp | 
+    assign |
+    'if' '(' exp ')' block [
+        { 'else' 'if' '(' exp ')' block } 'else' block
+    ] |
+    'while' '(' ( bool | num | value ) ')' block 
+
+exp ::
+    // Semantic Rule:: a known typed value
+    // - typically it'll be a primitive return type
+    // - see: TypePrimitive
+    value |
+    unOP exp |
+    exp [
+        unOP |
+        biOP exp |
+        '?' block ':' block
+    ]
+
+assignment ::
+    [types] {assign ','} assign 
+
+    /* SEMANTIC RULE: Child type definitions
+    - a child of the parent may share the type
+      the parent has without declaration of said type
+    - the parent MUST have a type to accomplish this feat
+    - in arrays its typical, to have the exact same type
+      in all of its indexies ::
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        num ListOfCommonSalaries [
+           44000, 86000, 220000
+        ];
+    ________________________________________________________
+    - in this object below, we have child objects
+    - hence we dont need to really declare more obj tags
+    - however its child members must rely on the parent's
+    - obj tag to delegate that object as mixed type members
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        obj Employees {
+            Steve {
+                num age = 44;
+                str name = "Steve", lastName = "Harvey";
+            },
+            Stacy {
+                num age = 22;
+                str name = "Stacy", lastName = "Studier";
+            }
+        };
+    ________________________________________________________
+    */
+
+modules::
+    'import' | 'export'
+
+child::
+    '.'
+
+TypePrimitive :: oneOf
+    'void'
+    'bool' 
+    ('num' | 'bin' | 'oct' | 'hex' )
+    'str'
+    'arr'
+    'obj'
+    'fn'
+    'super'
+    'const'
+    identifier?super
+
+types::
+    TypePrimitive | child | modules
+
+assign ::
+    identifier (
+        //value
+        [ 
+            '&&' | '||' | '??' | '!' |
+            '+' | '-' | '*' | '/' | '%' | '^' |
+            '>>' | '<<' | '>>>' | '<<<' | '~'
+        ] '=' exp |
+    
+        //object
+        '{' [ { assignment ';' } assignment ';' ] '}' |
+    
+        //function
+        '(' [ parameters ] ')' block |
+    
+        //array
+        '[' [ { exp ','} exp ] ']'
+    )
+
+parameters ::
+    { TypePrimitive identifier ',' } TypePrimitive identifier
+
+unOp :: '+' | '-' | '!' | '++' | '--' 
+
+biOp :: 
+    '+' | '-' | '*' | '/' | '%' | '^' | logic
+
+logic ::
+    '&&' | '||' | '??' | comparisons
+
+comparisons ::
+    '<' | '>' | '<=' | '>=' | '==' | '!='
+
+types ::
+    'const' | 'bool' | 'num' | 'str' | 'obj' | 'arr' | 'fn' | 'import' | 'export'
+
+import ::
+    'import' filepath 'as' identifier
+
+filepath::
+    stringLiteral
+
+export ::
+    'export' '{' { assignment ','} [assignment] '}'
+    
+literal ::
+    'true' | 'false' |
+    numberLiteral |
+    stringLiteral
+
+numberLiteral ::
+    { bin } |
+    { octal } |
+    { hex } |
+    { digit } digit [ '.' { digit } digit ]
+
+bin :: oneOf
+    0 1
+
+oct :: oneOf
+    bin 2 3 4 5 6 7 
+
+digit :: oneOf
+    oct 8 9
+
+hex :: oneOf
+    digit (
+        (a b c d e f) | (A B C D E F)
+    )
+
+stringLiteral ::
+    ''' { [^\x00-\x41'] } ''' |
+    '"' { 
+        [^\x00-\x41"\{\}] |
+        escapeSequence |
+        '{' exp '}' 
+    } '"'
+
+escapeSequence ::
+    \s | \t | \n | \b | \e | \f | \v | \{ | \} | \\ | \x hex hex | \u hex hex hex hex 
+
+---------------------------------------------------------------
+
