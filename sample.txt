@@ -43,24 +43,6 @@ Person Employees {
     };
 };
 
-super Person {
-    num age = 18;
-    bool isAdult() .age > 17;
-    str name, lastName, says, family;
-};
-
-Person Employees {
-    Steve {
-        .name = 'Steve';
-        .lastName = 'Harvey';
-    };
-    Stacy {
-        .age = 22;
-        .name = 'Stacy';
-        .lastName = 'Studier';
-    };
-};
-
 
 obj Employees {
     Person 

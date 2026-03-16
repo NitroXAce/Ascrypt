@@ -65,27 +65,34 @@ function TokenSearch() {
     this.i = -1;
     this.result = undefined;
 
-    while (++this.i < this.tokenArray.length) {
-        
-        console.log(this.i,this.tokenArray[this.i])
-
-        if (typeof this.tokenObject[""] != "undefined")
-            return this.tokenObject[''];
-
-        if (typeof this.tokenObject[this.tokenArray[this.i]] != "undefined") {
-            this.tokenObject = this.tokenObject[this.tokenArray[this.i]];
-            if (
-                typeof this.tokenObject.token == 'string' &&
-                typeof this.tokenObject.def == 'string'
-            ) return this.tokenObject;
-            else continue;
+    if(typeof this.tokenObject[this.tokenArray[0]] == 'undefined') return (
+        this.keep = {
+                token: this.tokenArray[0],
+                def: 'char'
+            },
+        new KeepOnly(this,['keep']).keep
+    );
+    
+    for(this.key in {a:1,b:2,c:3})
+        console.log(this.key)
+    
+    while (++this.i < this.tokenArray.length)
+        for(this.token in this.tokenObject){
+            console.log(this.token)
+            this.currentToken = this.tokenObject[this.token];
+            
+            if(this.currentToken.token == '')
+                return new KeepOnly(this,['tokenObject']).tokenObject[''];
+            
+            else if(
+                this.tokenArray[this.i] == this.currentToken &&
+                typeof this.currentToken.token == 'string' &&
+                typeof this.currentToken.def == 'string'
+            ) return new KeepOnly(this,['currentToken']).currentToken;
+                    
+            else this.tokenObject = this.tokenObject[this.currentToken];
         }
-
-        return {
-            token: this.tokenArray[this.i],
-            def: 'char'
-        };
-    }
+        
 }
 
 function TokenCrammer() {
@@ -109,20 +116,20 @@ function CharLexer() {
      */
     this.src = arguments[0].split('') || "";
     this.end = this.src.length;
+    this.obj = require('./tokenizer')
     this.i = -1;
     this.ln = 0;
     this.pos = 0;
     while (++this.i < this.end) {
-        this.charToken = new TokenSearch(this.src);
-        this.buffer[this.buffer.length] = this.charToken;
-        for (
-            this.consume = -1;
-            ++this.consume < this.charToken.token.length;
-        ) this.src = this.src.shift();
+        for(this.token in this.obj) {
+            
+        }
+        
+        
     }
 
 
-    return new KeepOnly(this, ['buffer', 'tokenBank', 'wordBank']);
+    return new KeepOnly(this, ['buffer']);
 }
 
 
