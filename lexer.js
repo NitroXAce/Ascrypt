@@ -153,14 +153,13 @@ function CharLexer() {
             if (!!this.charObj['']){
                 this.buffer[this.buffer.length] = this.charObj[''];
                 this.obj = require('./tokenizer');
-                continue;
             } 
             
-            throw new Error('LexicalError: Token is out of definitions.')
+            throw new Error('LexicalError: Token is out of definitions.');
             
         }
         
-        if()
+        //if()
         
         
         
