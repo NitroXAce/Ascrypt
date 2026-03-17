@@ -10,6 +10,43 @@ module.exports = {
     //' ': 'whitespace-space',
     //'\n': 'whitespace-new-line',
     //'\\': 'str-escape-letter',
+    
+    //specialized tokens to handle unique edge cases
+    '\x':function (primaryHex,secondaryHex){
+        this.hexList = '0123456789abcdef';
+        this.boolSet = [0,0];
+        for(this.hex in this.hexList)
+            for(this.a in arguments)
+                if(this.a < this.boolSet.length && arguments[this.a] == this.hex)
+                    this.boolSet[this.a] = 1;
+        if(!!this.boolSet[0] && !!this.boolSet[1]) return {
+            token: '\x'+primaryHex+secondaryHex,
+            def:'char-hex'
+        }; else return {
+            error: 'TokenError: this current token does not match its parameters, try again!'
+        };
+    },
+    
+    '\u':function (hexA,hexB,hexC,hexD){
+        this.hexList = '0123456789abcdef';
+        this.boolSet = [0,0,0,0];
+        for(this.hex in this.hexList)
+            for(this.a in arguments)
+                if(this.a < this.boolSet && arguments[this.a] == this.hex)
+                    this.boolSet[this.a] = 1;
+        if(
+            !!this.boolSet[0] &&
+            !!this.boolSet[1] &&
+            !!this.boolSet[2] &&
+            !!this.boolSet[3]
+        ) return {
+            token: '\u'+hexA+hexB+hexC+hexD,
+            def:'char-unicode'
+        }; else return{
+            error: 'TokenError: this current token does not match its parameters, try again!'
+        };
+    },
+    
 
     //enclosure operators
     "(": {
@@ -72,6 +109,11 @@ module.exports = {
             },
         },
     },
+    "\\":{
+        token:'\\',
+        def:'str-regex-escape-char'
+    },
+    
 
     //arithmetic operators prefix
     "+": {

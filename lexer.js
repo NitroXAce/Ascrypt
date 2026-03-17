@@ -109,21 +109,60 @@ function TokenCrammer() {
 }
 
 function CharLexer() {
-    this.buffer = [];
-    /**
-     *
-     * @type {string}
-     */
     this.src = arguments[0].split('') || "";
     this.end = this.src.length;
-    this.obj = require('./tokenizer')
+    this.obj = require('./tokenizer');
+    this.buffer = [];
     this.i = -1;
     this.ln = 0;
     this.pos = 0;
     while (++this.i < this.end) {
-        for(this.token in this.obj) {
+        this.char = this.src[this.i];
+        
+        //this is the most common occurrence before tokenizer
+        if(!this.obj[this.char]){
+            this.buffer[this.buffer.length] = {
+                token:this.char,    
+                def:'char'
+            };
+            continue;
+        }
+        
+        //character SHOULD match with the tokenizer
+        this.charObj = this.obj[this.char];
+        if(typeof this.charObj == 'object'){
+            
+            //if next character is a child of current object
+            //set the current object as a reference for the child
+            if(!!this.charObj[this.src[this.i+1]]){
+                this.obj = this.charObj;
+                continue;
+            }
+            
+            //determine charOBj to be final object
+            if(
+                !!this.charObj.token &&
+                !!this.charObj.def
+            ){
+                this.buffer[this.buffer.length] = this.charObj;
+                this.obj = require('./tokenizer');
+                continue;
+            }
+            
+            //if child is default and not a seeking matching pair
+            if (!!this.charObj['']){
+                this.buffer[this.buffer.length] = this.charObj[''];
+                this.obj = require('./tokenizer');
+                continue;
+            } 
+            
+            throw new Error('LexicalError: Token is out of definitions.')
             
         }
+        
+        if()
+        
+        
         
         
     }
