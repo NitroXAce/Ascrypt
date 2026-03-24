@@ -11,7 +11,9 @@ obj Obj {
 
 //let Names:str = { boyName, girlName, parentSurname }
 str Names {
-    boyName; girlName; parentSurname;
+    boyName;
+    girlName;
+    parentSurname;
 };
 
 obj Person1 {
@@ -26,7 +28,7 @@ obj Person1 {
 };
 
 super Person {
-    num age;
+    num age = 18;
     bool isAdult() .age > 17;
     str name, lastName, says, family;
 };
@@ -42,7 +44,6 @@ Person Employees {
         .lastName = 'Studier';
     };
 };
-
 
 obj Employees {
     Person 
@@ -72,8 +73,8 @@ Person Employees [
     }
 ];
 
-str scream(){
-    return 'HELLO WORLD!';
+str scream(str saySomething){
+    return saySomething ?? 'HELLO WORLD!';
 };
 
 arr listOfs [

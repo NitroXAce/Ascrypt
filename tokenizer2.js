@@ -1,4 +1,4 @@
-module.exports = {
+﻿module.exports = {
 
     //default "chars"
     /*'': {
@@ -46,149 +46,130 @@ module.exports = {
             };
         },
     },*/
-    
-    //whitespace PLEASE FORGIVE ME!!!
-    ' ':{
-        token:' ',
-        def:'symbol-whitespace-space'
-    },
-    
-    '\n':{
-        token:'\n',
-        def:'symbol-whitespace-newline'
-    },
-    
-    '\r':{
-        token:'\r',
-        def:'symbol-whitespace-carriage',
-        '\n':{
-            token:'\r\n',
-            def:'symbol-whitespace-carriage-newline'
-        }
-    },
+
 
     //enclosure operators
     "(": {
         token:'(',
-        def:'symbol-open-paren'
+        def:'open-paren'
     },
     ")": {
         token:')',
-        def:'symbol-close-paren'
+        def:'close-paren'
     },
     "[": {
         token:'[',
-        def:"symbol-open-square"
+        def:"open-square"
     },
     "]": {
         token:']',
-        def:"symbol-close-square"
+        def:"close-square"
     },
     "{": {
         token:'{',
-        def:"symbol-open-curly"
+        def:"open-curly"
     },
     "}": {
         token:'}',
-        def:"symbol-close-curly"
+        def:"close-curly"
     },
     ";": {
         token:';',
-        def:"symbol-semicolon"
+        def:"semicolon"
     },
     ":": {
         token:':',
-        def:"symbol-logic-colon-false"
+        def:"logic-colon-false"
     },
     '"': {
         token:'"',
-        def:"symbol-str-comp-dbl-quote"
+        def:"str-comp-dbl-quote"
     },
     "'":{
         token:"'",
-        def:"symbol-str-primitive-sgl-quote"
+        def:"str-primitive-sgl-quote"
     },
     ",": {
         token:',',
-        def: "symbol-comma"
+        def: "comma"
     },
     ".": {
         token:'.',
-        def:"symbol-type-assign-child-dot",
+        def:"type-assign-child-dot",
         ".": {
             token:"..",
-            def:"symbol-num-range",
+            def:"num-range",
             ".": {
                 token:'...',
-                def:"symbol-assign-spread-rest-arr-fn-num-range-exclusive"
+                def:"assign-spread-rest-arr-fn"
             },
         },
     },
 
 
-        //arithmetic operators prefix
+    //arithmetic operators prefix
     "+": {
         token:'+',
-        def:"symbol-math-add",
+        def:"math-add",
         "=": {
             token:'+=',
-            def:"symbol-math-self-add"
+            def:"math-self-add"
         },
         "+": {
             token:'++',
-            def:"symbol-unop-cycle-increment"
+            def:"unop-cycle-increment"
         },
     },
     "-": {
         token:'-',
-        def:"symbol-math-subtract",
+        def:"math-subtract",
         "=": {
             token:'-=',
-            def:"symbol-math-self-subtract"
+            def:"math-self-subtract"
         },
         "-": {
             token:'--',
-            def:"symbol-unop-cycle-decriment"
+            def:"unop-cycle-decriment"
         }
     },
     "*": {
         token:'*',
-        def:"symbol-math-multiply",
+        def:"math-multiply",
         "=": {
             token:'*=',
-            def:"symbol-math-self-multiply"
+            def:"math-self-multiply"
         },
         "*": {
             token:'**',
-            def:"symbol-math-power"
+            def:"math-power"
         },
         "/": {
             token:'/*',
-            def:"symbol-close-comment"
+            def:"close-comment"
         },
     },
     "/": {
         token:'/',
-        def:"symbol-math-divide",
+        def:"math-divide",
         "=": {
             token:'/=',
-            def:"symbol-math-self-divide"
+            def:"math-self-divide"
         },
         "/": {
             token:'//',
-            def:"symbol-unop-line-comment"
+            def:"unop-line-comment"
         },
         "*": {
             token:'/*',
-            def:"symbol-open-comment"
+            def:"open-comment"
         },
     },
     "%": {
         token:'%',
-        def:"symbol-math-modulus",
+        def:"math-modulus",
         "=": {
             token:'%=',
-            def:"symbol-math-self-modulus"
+            def:"math-self-modulus"
         },
     },
 
@@ -196,110 +177,110 @@ module.exports = {
     // == 
     "=": {
         token:'=',
-        def:"symbol-assign",
+        def:"assign",
         "=": {
             token:'==',
-            def:"symbol-logic-strict-equal"
+            def:"logic-strict-equal"
         }
     },
     "!": {
         token:'!',
-        def:"symbol-unop-logic-not",
+        def:"unop-logic-not",
         "=": {
             token:'!=',
-            def:"symbol-logic-not-equal"
+            def:"logic-not-equal"
         },
         "!": {
             token:'!!',
-            def:"symbol-unop-logic-absolute-boolean"
+            def:"unop-logic-absolute-boolean"
         },
     },
     "?": {
         token:'?',
-        def:"symbol-logic-ternary-true",
+        def:"logic-ternary-true",
         ".": {
             token:'?.',
-            def:"symbol-logic-optional-chain"
+            def:"logic-optional-chain"
         },
         "?":{
             token:'??',
-            def:"symbol-logic-nullish",
+            def:"logic-nullish",
             '?':{
                 token:'??=',
-                def:'symbol-logic-assign-nullish'
+                def:'logic-assign-nullish'
             }
         },
     },
     ">": {
         token:'>',
-        def:"symbol-greater-than",
+        def:"greater-than",
         "=": {
             token:'>=',
-            def:"symbol-greater-than-equal"
+            def:"greater-than-equal"
         },
         ">": {
             token:'>>',
-            def:"symbol-bin-shift-right",
+            def:"bin-shift-right",
             '>':{
                 token:'>>>',
-                def:'symbol-bin-unsigned-shift-right'
+                def:'bin-unsigned-shift-right'
             }
         }
     },
     "<": {
         token:'<',
-        def:"symbol-less-than",
+        def:"less-than",
         "=": {
             token:'<=',
-            def:"symbol-less-than-equal"
+            def:"less-than-equal"
         },
         "<": {
             token:'<<',
-            def:"symbol-bin-shift-left",
+            def:"bin-shift-left",
             '<': {
                 token:'<<<',
-                def:'symbol-bin-unsigned-shift-left'
+                def:'bin-unsigned-shift-left'
             }
         }
     },
     "&": {
         token:'&',
-        def:"symbol-bit-and",
+        def:"bit-and",
         "=": {
             token:'&=',
-            def:"symbol-self-bit-and"
+            def:"self-bit-and"
         },
         "&":{
             token:'&&',
-            def:"symbol-logic-and",
+            def:"logic-and",
             '=': {
                 token: '&&=',
-                def:'symbol-logic-assign-true-only'
+                def:'logic-assign-true-only'
             }
         }
     },
     "|": {
         token:'|',
-        def:"symbol-unop-bit-or",
+        def:"unop-bit-or",
         "=": {
             token:'|=',
-            def:"symbol-assign-self-bit-or"
+            def:"assign-self-bit-or"
         },
         "|": {
             token:'||',
-            def:"symbol-logic-or",
+            def:"logic-or",
             '=':{
                 token:'||=',
-                def:'symbol-logic-assign-self-or'
+                def:'logic-assign-self-or'
             }
         },
     },
     "^": {
         token:'^',
-        def:"symbol-bit-xor",
+        def:"bit-xor",
         "=": {
             token:'^=',
-            def:"symbol-bit-assign-self-xor"
+            def:"bit-assign-self-xor"
         },
     },
 
@@ -400,21 +381,21 @@ module.exports = {
                     t:{
                         token:'const',
                         def:"type-assign-constant"}}},
-                t:{
-                    token:'cont',
+            t:{
+                token:'cont',
+                def:'char',
+                i:{
+                    token:'conti',
                     def:'char',
-                    i:{
-                        token:'conti',
+                    n:{
+                        token:'contin',
                         def:'char',
-                        n:{
-                            token:'contin',
+                        u:{
+                            token:'continu',
                             def:'char',
-                            u:{
-                                token:'continu',
-                                def:'char',
-                                e: {
-                                    token:'continue',
-                                    def:"scope-loop-continue"}}}}}}},
+                            e: {
+                                token:'continue',
+                                def:"scope-loop-continue"}}}}}}},
     d:{
         token:'d',
         def:'letter-num-hex'},
@@ -429,7 +410,7 @@ module.exports = {
                 def:'char',
                 e:{
                     token:'else',
-                    def:"statement-scope-bool-conditional-else"}}},
+                    def:"scope-bool-conditional-else"}}},
         x:{
             token:'ex',
             def:'char',
@@ -492,52 +473,54 @@ module.exports = {
             def:'char',
             m: {
                 token:'num',
-                def:"type-assign-number"}}},
-    o:{
-        token:'o',
-        def:'char',
-        b:{
-            token:'ob',
+                def:"type-assign-number"}},
+        o:{
+            token:'o',
             def:'char',
-            j: {
-                token:'obj',
-                def:"type-assign-object"}
-        },
-        c:{
-            token:'oc',
-            def:'char',
-            t: {
-                token:'oct',
-                def:'type-assign-number-octal'}
-        },
-        f: {
-            token:'of',
-            def:"scope-of"}},
-    r:{
-        token:'r',
-        def:'char',
-        e:{
-            token:'re',
-            def:'char',
-            t:{
-                token:'ret',
+            b:{
+                token:'ob',
                 def:'char',
-                u:{
-                    token:'retu',
-                    def:'char',
-                    r:{
-                        token:'retur',
-                        def:'char',
-                        n:{
-                            token:'return',
-                            def:"scope-exit-return"}}}}}},
-        
-    s:{
-        token:'s',
-        def:'char',
-        t:{
-            token:'st',
+                j: {
+                    token:'obj',
+                    def:"type-assign-object"}
+            },
+            c:{
+                token:'oc',
+                def:'char',
+                t: {
+                    token:'oct',
+                    def:'type-assign-number-octal'}
+            },
+            f: {
+                token:'of',
+                def:"scope-of"}},
+        r:{
+            token:'r',
             def:'char',
+            e:{
+                token:'re',
+                def:'char',
+                t:{
+                    token:'ret',
+                    def:'char',
+                    u:{
+                        token:'retu',
+                        def:'char',
+                        r:{
+                            token:'retur',
+                            def:'char',
+                            n:{
+                                token:'return',
+                                def:"scope-exit-return"}}}}}}},
+
+    s:{
+        '': {
+            token:'s',
+            def:'char'},
+        t:{
+            '': {
+                token:'st',
+                def:'char'},
             r: {
                 token:'str',
                 def:"type-assign-string"}
@@ -580,5 +563,5 @@ module.exports = {
                     def:'char',
                     e: {
                         token:'while',
-                        def:"statement-scope-while"}}}}}
+                        def:"scope-while"}}}}}
 };

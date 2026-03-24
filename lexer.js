@@ -1,178 +1,102 @@
-function MergeObj() {
-    this.obj1 = arguments[0];
-    this.obj2 = arguments[1];
-    for (this.key in this.obj2)
-        this.obj1[this.key] = this.obj2[this.key];
-    return new KeepOnly(this, ['obj1']).obj1;
+function TokenMaker(){
+    return {
+        token:arguments[1] || arguments[0].obj.token,
+        def:arguments[2] || arguments[0].obj.def 
+    };
 }
 
-function CondenseToken() {
-    this.buffer = arguments[0];
-    this.result = [];
-    this.i = -1;
-    this.end = this.buffer.length;
-    while (this.i++ < this.end)
-        if (this.buffer[this.i] != '')
-            this.result[this.result.length] = this.buffer[this.i];
-    return new KeepOnly(this, ['result']).result;
-}
-
-function KeepOnly() {
-    this.obj = arguments[0];
-    this.keep = arguments[1];
-    this.result = {};
-    for (this.index in this.keep)
-        for (this.key in this.obj)
-            if (this.key == this.keep[this.index])
-                this.result[this.key] = this.obj[this.key];
-    delete this.obj;
-    delete this.keep;
-    delete this.index;
-    delete this.key;
-    return this.result;
-}
-
-function SplitCheck() {
-    this.stringy = arguments[0];
+function SplitCheck(){
+    this.src = arguments[0];
     this.splitter = arguments[1];
-    this.matcher = arguments[2];
+    this.match = arguments[2];
     this.hold = [[]];
-    this.result = null;
-
-    for (this.i in this.stringy)
-        if (this.stringy[this.i] != this.splitter)
-            this.hold[this.hold.length - 1] += this.stringy[this.i];
-        else this.hold[this.hold.length] = [];
-
-    if (!!this.matcher) {
-        for (this.i in this.hold)
-            if (this.hold[this.i] == this.matcher)
-                return (
-                    this.result = true,
-                        new KeepOnly(this, ['result']).result
-                );
-        this.result = false;
-        return new KeepOnly(this, ['result']);
-    }
-
-    return new KeepOnly(this, ['hold']).hold;
-}
-
-function TokenSearch() {
-    this.obj = require('./tokenizer').tokens;
-    this.tokenArray = arguments[0];
-    this.tokenObject = this.obj;
-    this.i = -1;
-    this.result = undefined;
-
-    if(typeof this.tokenObject[this.tokenArray[0]] == 'undefined') return (
-        this.keep = {
-                token: this.tokenArray[0],
-                def: 'char'
-            },
-        new KeepOnly(this,['keep']).keep
-    );
     
-    for(this.key in {a:1,b:2,c:3})
-        console.log(this.key)
-    
-    while (++this.i < this.tokenArray.length)
-        for(this.token in this.tokenObject){
-            console.log(this.token)
-            this.currentToken = this.tokenObject[this.token];
-            
-            if(this.currentToken.token == '')
-                return new KeepOnly(this,['tokenObject']).tokenObject[''];
-            
-            else if(
-                this.tokenArray[this.i] == this.currentToken &&
-                typeof this.currentToken.token == 'string' &&
-                typeof this.currentToken.def == 'string'
-            ) return new KeepOnly(this,['currentToken']).currentToken;
-                    
-            else this.tokenObject = this.tokenObject[this.currentToken];
-        }
+    for(this.i in this.src)
+        if(this.src[this.i] === this.splitter) this.hold[this.hold.length] = [];
+        else this.hold[this.hold.length -1] = this.src[this.i];
         
-}
-
-function TokenCrammer() {
-    this.buffer = arguments[0];
-    this.token = arguments[1];
-    this.keyword = arguments[2];
-    if (new SplitCheck(this.token.name, '-', this.keyword))
-        if (
-            typeof this.buffer[this.buffer.length - 1] == 'object' &&
-            new SplitCheck(this.buffer[this.buffer.length - 1].name, '-', this.keyword)
-        ) this.buffer[this.buffer.length - 1] = this.token;
-        else this.buffer[this.buffer.length] = this.token;
-    return new KeepOnly(this, ['buffer']).buffer;
+    if(!!this.match) {
+        for (this.i in this.hold)
+            if (this.hold[this.i] === this.match)
+                return true;
+        return false;
+    }
+    return this.hold;
 }
 
 function CharLexer() {
     this.src = arguments[0].split('') || "";
+    this.tokenizer = require('./tokenizer.js');
     this.end = this.src.length;
-    this.obj = require('./tokenizer');
+    this.obj = this.tokenizer;
+    this.debug = true;
     this.buffer = [];
     this.i = -1;
     this.ln = 0;
     this.pos = 0;
-    while (++this.i < this.end) {
+    while (++this.i < this.end){
+        
+        // DO NOT EDIT THISSSS ------------------------------------------------------
+
         this.char = this.src[this.i];
+        if(this.src[this.i+1])
+            this.nextChar = this.src[this.i+1];
         
-        //this is the most common occurrence before tokenizer
-        if(!this.obj[this.char]){
+        if(typeof this.obj[this.char] === 'object'){
+            
+            //if a nest is found, seek ahead til not
+            this.obj = this.obj[this.char];
+            if(typeof this.obj[this.nextChar] === 'object')
+                continue;
+            
             this.buffer[this.buffer.length] = {
-                token:this.char,    
-                def:'char'
+                token: this.obj.token,
+                def: this.obj.def
             };
-            continue;
-        }
+        } else this.buffer[this.buffer.length] = {
+            token: this.char,
+            def: 'char'
+        };
         
-        //character SHOULD match with the tokenizer
-        this.charObj = this.obj[this.char];
-        if(typeof this.charObj == 'object'){
+        // DO NOT EDIT ANYTHING ABOVE!!! ---------------------------------------------
+        
+        //reset scope
+        this.obj = this.tokenizer;
+        this.currToken = this.buffer[this.buffer.length-1];
+        if(!!this.buffer[this.buffer.length -2]) {
+            this.prevToken = this.buffer[this.buffer.length - 2];
+            this.currToken = this.buffer[this.buffer.length - 1];
             
-            //if next character is a child of current object
-            //set the current object as a reference for the child
-            if(!!this.charObj[this.src[this.i+1]]){
-                this.obj = this.charObj;
-                continue;
-            }
+            if(!(
+                new SplitCheck(this.currToken,'-','whitespace') &&
+                new SplitCheck(this.prevToken,'-','string')
+            ))
             
-            //determine charOBj to be final object
+            //lets create an identifier!
             if(
-                !!this.charObj.token &&
-                !!this.charObj.def
+                new SplitCheck(this.prevToken,'-','type') &&
+                (
+                    new SplitCheck(this.currToken,'-','letter') ||
+                    new SplitCheck(this.currToken,'-','char')
+                )
             ){
-                this.buffer[this.buffer.length] = this.charObj;
-                this.obj = require('./tokenizer');
+                this.buffer[this.buffer.length -1].def = 'identifier';
                 continue;
             }
+
             
-            //if child is default and not a seeking matching pair
-            if (!!this.charObj['']){
-                this.buffer[this.buffer.length] = this.charObj[''];
-                this.obj = require('./tokenizer');
-            } 
-            
-            throw new Error('LexicalError: Token is out of definitions.');
             
         }
-        
-        //if()
-        
-        
-        
-        
+            
     }
 
 
-    return new KeepOnly(this, ['buffer']);
+    return this.buffer;
 }
 
 
 module.exports = {
-    CharLexer, SplitCheck, KeepOnly, TokenSearch
+    CharLexer
 }
 
 
