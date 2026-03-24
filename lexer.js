@@ -49,10 +49,26 @@ function CharLexer() {
             if(typeof this.obj[this.nextChar] === 'object')
                 continue;
             
+            if(this.buffer[this.buffer.length -2])
+                this.prevToken = this.buffer[this.buffer.length - 2];
+            this.currToken = this.buffer[this.buffer.length - 1];
+            
+            if(
+                this.prevToken &&
+                new SplitCheck(this.currToken,'-','whitespace') &&
+                new SplitCheck(this.prevToken,'-','string')
+            ){
+                this.buffer[this.buffer.length - 2].token += this.currToken.token;
+                this.buffer[this.buffer.length-1] = undefined;
+                this.buffer.length -= 1;
+                continue;
+            }
+
             this.buffer[this.buffer.length] = {
                 token: this.obj.token,
                 def: this.obj.def
             };
+
         } else this.buffer[this.buffer.length] = {
             token: this.char,
             def: 'char'
@@ -63,31 +79,32 @@ function CharLexer() {
         //reset scope
         this.obj = this.tokenizer;
         this.currToken = this.buffer[this.buffer.length-1];
-        if(!!this.buffer[this.buffer.length -2]) {
-            this.prevToken = this.buffer[this.buffer.length - 2];
-            this.currToken = this.buffer[this.buffer.length - 1];
-            
-            if(!(
-                new SplitCheck(this.currToken,'-','whitespace') &&
-                new SplitCheck(this.prevToken,'-','string')
-            ))
-            
-            //lets create an identifier!
-            if(
-                new SplitCheck(this.prevToken,'-','type') &&
-                (
-                    new SplitCheck(this.currToken,'-','letter') ||
-                    new SplitCheck(this.currToken,'-','char')
-                )
-            ){
-                this.buffer[this.buffer.length -1].def = 'identifier';
-                continue;
-            }
+        if(!this.buffer[this.buffer.length -2]) continue;
 
-            
-            
+        this.prevToken = this.buffer[this.buffer.length - 2];
+        this.currToken = this.buffer[this.buffer.length - 1];
+        
+        if(
+            new SplitCheck(this.currToken,'-','whitespace') &&
+            new SplitCheck(this.prevToken,'-','string')
+        ){
+            this.buffer[this.buffer.length - 2].token += this.currToken.token;
+            this.buffer[this.buffer.length-1] = undefined;
+            this.buffer.length -= 1;
+            continue;
         }
-            
+        
+        //lets create an identifier!
+        if(
+            new SplitCheck(this.prevToken,'-','type') &&
+            (
+                new SplitCheck(this.currToken,'-','letter') ||
+                new SplitCheck(this.currToken,'-','char')
+            )
+        ){
+            this.buffer[this.buffer.length -1].def = 'identifier';
+            continue;
+        }   
     }
 
 
