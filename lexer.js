@@ -94,16 +94,6 @@ function CharLexer() {
         this.prevToken = this.buffer[this.buffer.length - 2];
         this.currToken = this.buffer[this.buffer.length - 1];
         
-        if(
-            new SplitCheck(this.currToken,'-','whitespace') &&
-            new SplitCheck(this.prevToken,'-','string')
-        ){
-            this.buffer[this.buffer.length - 2].token += this.currToken.token;
-            this.buffer[this.buffer.length-1] = undefined;
-            this.buffer.length -= 1;
-            continue;
-        }
-        
         //lets create an identifier!
         if(
             new SplitCheck(this.prevToken,'-','type') && (
