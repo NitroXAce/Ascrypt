@@ -49,30 +49,33 @@ function CharLexer() {
             if(typeof this.obj[this.nextChar] === 'object')
                 continue;
             
-            if(this.buffer[this.buffer.length -2])
-                this.prevToken = this.buffer[this.buffer.length - 2];
-            this.currToken = this.buffer[this.buffer.length - 1];
+            //gather a previous token, if found
+            //set current token value to eval from
+            this.currToken = this.obj;
+            if(this.buffer[this.buffer.length -1])
+                this.prevToken = this.buffer[this.buffer.length - 1];
             
-
-
+            //lets work on some whitespacing
             if(
                 this.prevToken &&
                 new SplitCheck(this.currToken,'-','whitespace')
-            ){  
-                if(!new SplitCheck(this.prevToken,'-','string'))
-                    continue;
-                    
-                this.buffer[this.buffer.length - 2].token += this.currToken.token;
-                this.buffer[this.buffer.length-1] = undefined;
-                this.buffer.length -= 1;
+            ){
+                //if we DO have a prev token of stringm append, otherwise just continue
+                if(new SplitCheck(this.prevToken,'-','string'))
+                    this.buffer[this.buffer.length - 1].token += this.currToken.token;    
                 continue;
             }
-            else this.buffer[this.buffer.length] = {
+
+            //now time to add the non-spaced, non stringed token into the buffer!    
+            this.buffer[this.buffer.length] = {
                 token: this.obj.token,
                 def: this.obj.def
             };
 
-        } else this.buffer[this.buffer.length] = {
+        }
+        
+        //any non-tokenized token gets pushed as a raw char token
+        else this.buffer[this.buffer.length] = {
             token: this.char,
             def: 'char'
         };
