@@ -53,18 +53,21 @@ function CharLexer() {
                 this.prevToken = this.buffer[this.buffer.length - 2];
             this.currToken = this.buffer[this.buffer.length - 1];
             
+
+
             if(
                 this.prevToken &&
-                new SplitCheck(this.currToken,'-','whitespace') &&
-                new SplitCheck(this.prevToken,'-','string')
-            ){
+                new SplitCheck(this.currToken,'-','whitespace')
+            ){  
+                if(!new SplitCheck(this.prevToken,'-','string'))
+                    continue;
+                    
                 this.buffer[this.buffer.length - 2].token += this.currToken.token;
                 this.buffer[this.buffer.length-1] = undefined;
                 this.buffer.length -= 1;
                 continue;
             }
-
-            this.buffer[this.buffer.length] = {
+            else this.buffer[this.buffer.length] = {
                 token: this.obj.token,
                 def: this.obj.def
             };
