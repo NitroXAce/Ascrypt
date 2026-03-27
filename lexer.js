@@ -82,9 +82,13 @@ function CharLexer() {
         
         // DO NOT EDIT ANYTHING ABOVE!!! ---------------------------------------------
         
-        //reset scope
+        //  NOW WE CHECK TOKENS BELOW ------------------------------------------------
+        
+        //reset token checking scope til next loop iteration
         this.obj = this.tokenizer;
         this.currToken = this.buffer[this.buffer.length-1];
+
+        //if we dont have a prev token to check, lets just continue til we do!
         if(!this.buffer[this.buffer.length -2]) continue;
 
         this.prevToken = this.buffer[this.buffer.length - 2];
@@ -102,15 +106,16 @@ function CharLexer() {
         
         //lets create an identifier!
         if(
-            new SplitCheck(this.prevToken,'-','type') &&
-            (
+            new SplitCheck(this.prevToken,'-','type') && (
                 new SplitCheck(this.currToken,'-','letter') ||
                 new SplitCheck(this.currToken,'-','char')
-            )
-        ){
+        )){
             this.buffer[this.buffer.length -1].def = 'identifier';
             continue;
         }   
+
+
+        // TOKEN CHECKING ZONE ABOVE ------------------------------------------------
     }
 
 
