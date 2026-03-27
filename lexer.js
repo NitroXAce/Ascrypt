@@ -15,13 +15,13 @@ function SplitCheck(){
         if(this.src[this.i] === this.splitter) this.hold[this.hold.length] = [];
         else this.hold[this.hold.length -1] = this.src[this.i];
         
-    if(!!this.match) {
-        for (this.i in this.hold)
-            if (this.hold[this.i] === this.match)
-                return true;
-        return false;
-    }
-    return this.hold;
+    if(!this.match) 
+        return this.hold;
+        
+    for (this.i in this.hold)
+        if (this.hold[this.i] === this.match)
+            return true;
+    return false;
 }
 
 function CharLexer() {
