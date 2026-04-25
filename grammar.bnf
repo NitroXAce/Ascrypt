@@ -3,19 +3,19 @@ file ::
 
 block ::
     exp | 
-    '{' statements '}' |
+    '{' statements [  ] '}' |
     '(' { exp ',' } [ exp ] ')'
 
 statements ::
-    { statement ';' } [
-        'break' |
-        'continue' |
-        'return' statement 
-    ';' ] 
+    { statement ';' }  
 
 statement ::
     exp | 
     assign |
+    'break' |
+    'continue' |
+    'return' exp |
+    'throw' exp |
     'if' '(' exp ')' block [
         { 'else' 'if' '(' exp ')' block } 'else' block
     ] |

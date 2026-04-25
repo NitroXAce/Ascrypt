@@ -1,18 +1,29 @@
-module.exports = {
+module.exports = {types:[
+        'bool',
+        'bin',
+        'oct',
+        'num',
+        'hex',
+        'str',
+        'arr',
+        'obj',
+        'fn',
+        'module',
+        'super',
+        'const'
+    ],
 
-    //default "chars"
+//default "chars"
     /*'': {
         token:'',
         def:'char'
     },*/
-
-
     /*"\\": {
         '': {
             token: '\\',
             def: 'str-regex-escape-char'
         },
-        'x': function (primaryHex, secondaryHex) {
+        'x': fn (primaryHex, secondaryHex) {
             this.hexList = '0123456789abcdef';
             this.boolSet = [0, 0];
             for (this.hex in this.hexList)
@@ -26,7 +37,7 @@ module.exports = {
                 error: 'TokenError: this current token does not match its parameters, try again!'
             };
         },
-        'u': function (hexA, hexB, hexC, hexD) {
+        'u': fn (hexA, hexB, hexC, hexD) {
             this.hexList = '0123456789abcdef';
             this.boolSet = [0, 0, 0, 0];
             for (this.hex in this.hexList)
@@ -46,28 +57,34 @@ module.exports = {
             };
         },
     },*/
-    
-    //whitespace PLEASE FORGIVE ME!!!
+
+//whitespace PLEASE FORGIVE ME!!!
+    '':{
+        token:'',
+        def:'please-god-why'
+    },
+
     ' ':{
         token:' ',
         def:'symbol-whitespace-space'
     },
-    
+
     '\n':{
         token:'\n',
         def:'symbol-whitespace-newline'
     },
-    
+
     '\r':{
         token:'\r',
         def:'symbol-whitespace-carriage',
         '\n':{
             token:'\r\n',
-            def:'symbol-whitespace-carriage-newline'
+            def:'symbol-whitespace-carriage-newline',
+            pos:1
         }
     },
 
-    //enclosure operators
+//enclosure operators
     "(": {
         token:'(',
         def:'symbol-open-paren'
@@ -114,19 +131,18 @@ module.exports = {
     },
     ".": {
         token:'.',
-        def:"symbol-type-assign-child-dot",
+        def:"symbol-identifier-assign-num-child-dot",
         ".": {
             token:"..",
             def:"symbol-num-range",
             ".": {
                 token:'...',
                 def:"symbol-assign-spread-rest-arr-fn-num-range-exclusive"
-            },
-        },
+            }
+        }
     },
-
-
-        //arithmetic operators prefix
+    
+    //arithmetic operators prefix
     "+": {
         token:'+',
         def:"symbol-math-add",
@@ -137,7 +153,7 @@ module.exports = {
         "+": {
             token:'++',
             def:"symbol-unop-cycle-increment"
-        },
+        }
     },
     "-": {
         token:'-',
@@ -165,7 +181,7 @@ module.exports = {
         "/": {
             token:'/*',
             def:"symbol-close-comment"
-        },
+        }
     },
     "/": {
         token:'/',
@@ -181,7 +197,7 @@ module.exports = {
         "*": {
             token:'/*',
             def:"symbol-open-comment"
-        },
+        }
     },
     "%": {
         token:'%',
@@ -189,11 +205,11 @@ module.exports = {
         "=": {
             token:'%=',
             def:"symbol-math-self-modulus"
-        },
+        }
     },
 
-    //comparison operators
-    // == 
+//comparison operators
+// == 
     "=": {
         token:'=',
         def:"symbol-assign",
@@ -211,8 +227,8 @@ module.exports = {
         },
         "!": {
             token:'!!',
-            def:"symbol-unop-logic-absolute-boolean"
-        },
+            def:"symbol-unop-logic-absolute-bool"
+        }
     },
     "?": {
         token:'?',
@@ -228,7 +244,7 @@ module.exports = {
                 token:'??=',
                 def:'symbol-logic-assign-nullish'
             }
-        },
+        }
     },
     ">": {
         token:'>',
@@ -292,7 +308,7 @@ module.exports = {
                 token:'||=',
                 def:'symbol-logic-assign-self-or'
             }
-        },
+        }
     },
     "^": {
         token:'^',
@@ -300,70 +316,72 @@ module.exports = {
         "=": {
             token:'^=',
             def:"symbol-bit-assign-self-xor"
-        },
+        }
     },
 
-    //numbers - because WHY NOT
+//nums - because WHY NOT
     "0": {
         token:'0',
-        def:"num-bin-oct-dec-hex"
+        def:"bin-oct-num-hex"
     },
     "1": {
         token:'1',
-        def:"num-bin-oct-dec-hex"
+        def:"bin-oct-num-hex"
     },
     "2": {
         token:'2',
-        def:"num-oct-dec-hex"
+        def:"oct-num-hex"
     },
     "3": {
         token:'3',
-        def:"num-oct-dec-hex"
+        def:"oct-num-hex"
     },
     "4": {
         token:'4',
-        def:"num-oct-dec-hex"
+        def:"oct-num-hex"
     },
     "5": {
         token:'5',
-        def:"num-oct-dec-hex"
+        def:"oct-num-hex"
     },
     "6": {
         token:'6',
-        def:"num-oct-dec-hex"
+        def:"oct-num-hex"
     },
     "7": {
         token:'7',
-        def:"num-oct-dec-hex"
+        def:"oct-num-hex"
     },
     "8": {
         token:'8',
-        def:"num-dec-hex"
+        def:"num-hex"
     },
     "9": {
         token:'9',
-        def:"num-dec-hex"
+        def:"num-hex"
     },
 
-    //brute force matching: like tokens but for words
+//brute force matching: like tokens but for words
     a:{
         token:'a',
-        def:'letter-num-hex',
+        def:'letter-hex',
         r:{
             token:'ar',
             def:'char',
             r:{
                 token:'arr',
-                def:"type-assign-array"}}},
+                def:"type-assign-arr"
+            }}},
     b:{
         token:'b',
-        def:'letter-num-hex',
+        def:'letter-hex',
         i:{
             token:'bi',
             def:'char',
             n: {
                 token:'bin',
-                def:'type-assign-number-binary'}},
+                def:'type-assign-num-bin'
+            }},
         o:{
             token:'bo',
             def:'char',
@@ -372,7 +390,8 @@ module.exports = {
                 def:'char',
                 l:{
                     token:'bool',
-                    def:"type-assign-boolean"}}},
+                    def:"type-assign-bool"
+                }}},
         r:{
             token:'br',
             def:'char',
@@ -384,10 +403,11 @@ module.exports = {
                     def:'char',
                     k:{
                         token:'break',
-                        def:"scope-loop-exit-break"}}}}},
+                        def:"scope-loop-exit-break"
+                    }}}}},
     c:{
         token:'c',
-        def:'letter-num-hex',
+        def:'letter-hex',
         o:{
             token:'co',
             def:'char',
@@ -399,28 +419,31 @@ module.exports = {
                     def:'char',
                     t:{
                         token:'const',
-                        def:"type-assign-constant"}}},
-                t:{
-                    token:'cont',
+                        def:"type-assign-const"
+                    }}},
+            t:{
+                token:'cont',
+                def:'char',
+                i:{
+                    token:'conti',
                     def:'char',
-                    i:{
-                        token:'conti',
+                    n:{
+                        token:'contin',
                         def:'char',
-                        n:{
-                            token:'contin',
+                        u:{
+                            token:'continu',
                             def:'char',
-                            u:{
-                                token:'continu',
-                                def:'char',
-                                e: {
-                                    token:'continue',
-                                    def:"scope-loop-continue"}}}}}}},
+                            e: {
+                                token:'continue',
+                                def:"scope-loop-continue"
+                            }}}}}}},
     d:{
         token:'d',
-        def:'letter-num-hex'},
+        def:'letter-hex'
+    },
     e:{
         token:'e',
-        def:'letter-num-hex',
+        def:'letter-hex',
         l:{
             token:'el',
             def:'char',
@@ -429,7 +452,8 @@ module.exports = {
                 def:'char',
                 e:{
                     token:'else',
-                    def:"statement-scope-bool-conditional-else"}}},
+                    def:"statement-scope-bool-conditional-else"
+                }}},
         x:{
             token:'ex',
             def:'char',
@@ -444,13 +468,15 @@ module.exports = {
                         def:'char',
                         t:{
                             token:'export',
-                            def:"type-module-export"}}}}}},
+                            def:"type-module-export"
+                        }}}}}},
     f:{
         token:'f',
-        def:'letter-num-hex',
+        def:'letter-hex',
         n:{
             token:'fn',
-            def:"type-assign-function"}},
+            def:"type-assign-fn"
+        }},
     h:{
         token:'h',
         def:'char',
@@ -459,16 +485,19 @@ module.exports = {
             def:'char',
             x:{
                 token:'hex',
-                def:'type-assign-number-hex'}}},
+                def:'type-assign-num-hex'
+            }}},
     i:{
         token:'i',
         def:'char',
         f:{
             token:'if',
-            def:"scope-bool-condition-if"},
+            def:"scope-bool-condition-if"
+        },
         n:{
             token:'in',
-            def:"scope-in"},
+            def:"scope-in"
+        },
         m:{
             token:'im',
             def:'char',
@@ -483,7 +512,8 @@ module.exports = {
                         def:'char',
                         t:{
                             token:'import',
-                            def:"type-module-import"}}}}}},
+                            def:"type-module-import"
+                        }}}}}},
     n:{
         token:'n',
         def:'char',
@@ -492,7 +522,8 @@ module.exports = {
             def:'char',
             m: {
                 token:'num',
-                def:"type-assign-number"}}},
+                def:"type-assign-num"
+            }}},
     o:{
         token:'o',
         def:'char',
@@ -501,18 +532,21 @@ module.exports = {
             def:'char',
             j: {
                 token:'obj',
-                def:"type-assign-object"}
+                def:"type-assign-obj"
+            }
         },
         c:{
             token:'oc',
             def:'char',
             t: {
                 token:'oct',
-                def:'type-assign-number-octal'}
+                def:'type-assign-num-oct'
+            }
         },
         f: {
             token:'of',
-            def:"scope-of"}},
+            def:"scope-of"
+        }},
     r:{
         token:'r',
         def:'char',
@@ -530,8 +564,8 @@ module.exports = {
                         def:'char',
                         n:{
                             token:'return',
-                            def:"scope-exit-return"}}}}}},
-        
+                            def:"scope-exit-return"
+                        }}}}}},
     s:{
         token:'s',
         def:'char',
@@ -540,20 +574,24 @@ module.exports = {
             def:'char',
             r: {
                 token:'str',
-                def:"type-assign-string"}
-        },
-        u:{
-            token:'su',
+                def:"type-assign-str"
+            }}},
+    t:{
+        token:'t',
+        def:'char',
+        y:{
+            token:'ty',
             def:'char',
             p:{
-                token:'sup',
+                token:'typ',
                 def:'char',
                 e:{
-                    token:'supe',
-                    def:'char',
-                    r: {
-                        token:'super',
-                        def:"type-assign-superset"}}}}},
+                    token:'type',
+                    def:'type-assign-newType'
+                }
+            }
+        }
+    },
     v:{
         token:'v',
         def:'char',
@@ -565,7 +603,8 @@ module.exports = {
                 def:'char',
                 d: {
                     token:'void',
-                    def:"type-assign-void"}}}},
+                    def:"type-assign-void"
+                }}}},
     w:{
         token:'w',
         def:'char',
@@ -580,5 +619,8 @@ module.exports = {
                     def:'char',
                     e: {
                         token:'while',
-                        def:"statement-scope-while"}}}}}
+                        def:"statement-scope-while"
+                    }}}}}
+
 };
+

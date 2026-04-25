@@ -1,15 +1,19 @@
-const nonNegotiable = {
-    str name = "steve";
+num age = 23 - 69;
+
+const nonNegotiable {
+    str name = 'steve';
 };
+//nonNegotiable.name
 
 obj Obj {
     yeet {
         str yeeted = 'I scream';
     };
 };
+//Obj.yeet.yeeted
+//returns 'I scream'
 
-
-//let Names:str = { boyName, girlName, parentSurname }
+//let Names:str = { boyName, girlName, parentSurname };
 str Names {
     boyName;
     girlName;
@@ -27,7 +31,14 @@ obj Person1 {
         };*/
 };
 
-super Person {
+Person1 {
+    const keep() "please keep me!";
+    .name = "Stevie";
+};
+
+{ name newName; says;} Person1;
+
+type Person {
     num age = 18;
     bool isAdult() .age > 17;
     str name, lastName, says, family;
