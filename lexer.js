@@ -134,6 +134,7 @@ function CharLexer() {
                 continue;
             }
 
+            //handling types based on identifier context
             if (this.prevToken.def.indexOf('type')+1) {
                 for (this.type = 0; ++this.type < this.types.length;)
                     if (!(this.prevToken.def.indexOf(this.types[this.type]) +1)) 
