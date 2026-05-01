@@ -20,25 +20,6 @@ function TokenMaker() {
     };
 }
 
-function SplitCheck() {
-    this.hold = [[]];
-    this.bool = false;
-
-    for (this.i = -1; ++this.i < arguments[0].length;)
-        if (arguments[0][this.i] !== arguments[1])
-            this.hold[this.hold.length - 1] += arguments[0][this.i];
-        else if (arguments[2] && arguments[2] === this.hold[this.hold.length - 1])
-            return this.bool = true;
-        else this.hold[this.hold.length] = [];
-
-    if(!arguments[2])
-        return this.hold;
-
-    if(arguments[2] !== this.hold[this.hold.length - 1])
-        return this.bool;
-
-    return this.bool = true;
-}
 
 function CharLexer() {
     //static start
@@ -54,6 +35,25 @@ function CharLexer() {
     this.obj = this.tokenizer;
     this.buffer = [];
     this.typeNest = [];
+    this.heap = {
+        //primitive types
+        'bool':{},
+        'bin':{},
+        'oct':{},
+        'num':{},
+        'hex':{},
+        'str':{},
+        'const':{},
+        
+        //vehicular types
+        'arr':{},
+        'obj':{},
+        'fn':{},
+        
+        //very complex types
+        'module':{},
+        'super':{},
+    };
     
     //position markers
     this.i = -1;
@@ -81,9 +81,9 @@ function CharLexer() {
                 this,
                 '',
                 '',
-                new SplitCheck(this.obj.def, '-', 'newline').bool
+                this.obj.def.indexOf( 'newline')+1
                     ? ++this.ln : this.ln,
-                new SplitCheck(this.obj.def, '-', 'newline').bool
+                this.obj.def.indexOf( 'newline')+1
                     ? (this.pos = 1, this.pos) : this.pos - this.obj.token.length 
             );
 
@@ -112,8 +112,8 @@ function CharLexer() {
         if (!(this.currToken && this.prevToken)) continue;
 
         //whiteSpace cleanup
-        if (new SplitCheck(this.currToken.def, '-', 'whitespace').bool) {
-            if (new SplitCheck(this.prevToken.def, '-', 'string').bool)
+        if (this.currToken.def.indexOf('whitespace')+1) {
+            if (this.prevToken.def.indexOf('string')+1)
                 this.buffer[this.buffer.length - 2].token += this.currToken.token;
             this.buffer.length -= 1;
             continue;
@@ -121,61 +121,64 @@ function CharLexer() {
         
         //letter and char crunching
         if (
-            new SplitCheck(this.currToken.def, '-', 'char').bool ||
-            new SplitCheck(this.currToken.def, '-', 'letter').bool
+            this.currToken.def.indexOf('char')+1 ||
+            this.currToken.def.indexOf('letter')+1
         ) {
             //append to a current identifier or string
             if (
-                new SplitCheck(this.prevToken.def, '-', 'identifier').bool ||
-                new SplitCheck(this.prevToken.def, '-', 'string').bool
+                this.prevToken.def.indexOf('identifier')+1 ||
+                this.prevToken.def.indexOf('string')+1
             ) {
                 this.buffer[this.buffer.length - 2].token += this.currToken.token;
                 this.buffer.length -= 1;
                 continue;
             }
 
-            if (new SplitCheck(this.prevToken.def, '-', 'type').bool) {
+            if (this.prevToken.def.indexOf('type')+1) {
                 for (this.type = 0; ++this.type < this.types.length;)
-                    if (new SplitCheck(
-                        this.prevToken.def,
-                        '-',
-                        this.types[this.type]
-                    ).bool) {
-                        this.typeKept = this.types[this.type];
+                    if (!(this.prevToken.def.indexOf(this.types[this.type]) +1)) 
+                        continue;
+                    else {
+                        this.buffer[this.buffer.length - 1] = new TokenMaker(
+                            this,
+                            this.currToken.token,
+                            'identifier-' + this.types[this.type]
+                        );
                         break;
                     }
-
-                this.buffer[this.buffer.length - 1] = new TokenMaker(
-                    this,
-                    this.currToken.token,
-                    'identifier-' + this.typeKept
-                );
                 
                 continue;
             }
-            continue;
+        }
+
+        //string handling
+        if(this.prevToken.def.indexOf('quote')+1){
+
         }
         
-        //operations characters
-        if(new SplitCheck(this.currToken.def,'-','open').bool){
+        //operations characters based on identifier
+        if(
+            this.currToken.def.indexOf('open')+1 &&
+            this.prevToken.def.indexOf('identifier')+1
+        ){
+            //function definition/call
+            if(this.currToken.def.indexOf('paren')+1){
+                
+            }
             
-            //string handling
-            if(new SplitCheck(this.prevToken.def,'-','str').bool){}
+            //object definiton/call
+            if(this.currToken.def.indexOf('curly')+1){
+                
+            }
             
-            //identifier landling
-            if(new SplitCheck(this.prevToken.def,'-','identifier').bool){
+            //array definition/call
+            if(this.currToken.def.indexOf('square')+1){
                 
-                //function definition/call
-                if(new SplitCheck(this.currToken.def,'-','paren').bool){}
+            }
+            
+            //assignments
+            if(this.currToken.def.indexOf('assign')+1){
                 
-                //object definiton/call
-                if(new SplitCheck(this.currToken.def,'-','curly').bool){}
-                
-                //array definition/call
-                if(new SplitCheck(this.currToken.def,'-','square').bool){}
-                
-                //assignments
-                if(new SplitCheck(this.currToken.def,'-','assign').bool){}
             }
             
             
