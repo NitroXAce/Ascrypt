@@ -179,7 +179,7 @@ module.exports = {types:[
             def:"symbol-math-power"
         },
         "/": {
-            token:'/*',
+            token:'*/',
             def:"symbol-close-comment"
         }
     },

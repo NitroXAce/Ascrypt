@@ -3,11 +3,13 @@ function KeepOnly() {
 
     for (this.i in arguments[0])
         for (this.j in arguments[1])
-            if (this.i === arguments[1][this.j])
+            if (this.i === arguments[1][this.j]){
                 this.result[this.i] = arguments[0][this.i];
+                if (arguments[1].length === 1)
+                    return this.result[arguments[1][0]];
+                else continue;
+            }
 
-    if (arguments[1].length === 1)
-        return this.result[arguments[1][0]];
     return this.result;
 }
 
@@ -109,7 +111,7 @@ function CharLexer() {
             this.prevToken = this.buffer[this.buffer.length - 2];
 
         //if no screening of tokens, continue til I do
-        if (!(this.currToken && this.prevToken)) continue;
+        if (!this.prevToken) continue;
 
         //whiteSpace cleanup
         if (this.currToken.def.indexOf('whitespace')+1) {
@@ -153,34 +155,61 @@ function CharLexer() {
         }
 
         //string handling
-        if(this.prevToken.def.indexOf('quote')+1){
+        /*if(this.prevToken.def.indexOf('quote')+1){
 
+        }*/
+
+        //comment handling
+        if(this.prevToken.def.indexOf('comment')+1){
+
+            //line comment til
+            if(
+                this.prevToken.def.indexOf('line')+1 &&
+                this.currToken.def.indexOf('newline')+1
+            )
+                continue;
+
+            //block comment exit
+            else if(this.currToken.def.indexOf('close-comment')+1)
+                continue;
+
+
+            else {
+                this.buffer[this.buffer.length - 2].token += this.currToken.token;
+                this.buffer.length -= 1;
+                continue;
+            }
+            
         }
         
         //operations characters based on identifier
         if(
-            this.currToken.def.indexOf('open')+1 &&
-            this.prevToken.def.indexOf('identifier')+1
+            this.currToken.def.indexOf('open')+1
         ){
-            //function definition/call
-            if(this.currToken.def.indexOf('paren')+1){
+            //comment context
+
+            //identifier context
+            /*if(this.prevToken.def.indexOf('identifier')+1){
+                //function definition/call
+                if(this.currToken.def.indexOf('paren')+1){
+                    
+                }
                 
-            }
-            
-            //object definiton/call
-            if(this.currToken.def.indexOf('curly')+1){
+                //object definiton/call
+                if(this.currToken.def.indexOf('curly')+1){
+                    
+                }
                 
-            }
-            
-            //array definition/call
-            if(this.currToken.def.indexOf('square')+1){
+                //array definition/call
+                if(this.currToken.def.indexOf('square')+1){
+                    
+                }
                 
-            }
-            
-            //assignments
-            if(this.currToken.def.indexOf('assign')+1){
-                
-            }
+                //assignments
+                if(this.currToken.def.indexOf('assign')+1){
+                    
+                }
+            }*/
             
             
         }
