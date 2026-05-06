@@ -160,7 +160,7 @@ function CharLexer() {
         }*/
 
         //comment handling
-        if(this.prevToken.def.indexOf('comment')+1){
+        /*if(this.prevToken.def.indexOf('comment')+1){
 
             //line comment til
             if(
@@ -173,14 +173,14 @@ function CharLexer() {
             else if(this.currToken.def.indexOf('close-comment')+1)
                 continue;
 
-
+            //build comment token
             else {
                 this.buffer[this.buffer.length - 2].token += this.currToken.token;
                 this.buffer.length -= 1;
                 continue;
             }
             
-        }
+        }*/
         
         //operations characters based on identifier
         if(
