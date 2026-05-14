@@ -1,4 +1,5 @@
-module.exports = {types:[
+module.exports = {
+    types:[
         'bool',
         'bin',
         'oct',
@@ -13,7 +14,7 @@ module.exports = {types:[
         'const'
     ],
 
-//default "chars"
+    //default "chars"
     /*'': {
         token:'',
         def:'char'
@@ -58,22 +59,19 @@ module.exports = {types:[
         },
     },*/
 
-//whitespace PLEASE FORGIVE ME!!!
+    //whitespace PLEASE FORGIVE ME!!!
     '':{
         token:'',
         def:'please-god-why'
     },
-
     ' ':{
         token:' ',
         def:'symbol-whitespace-space'
     },
-
     '\n':{
         token:'\n',
         def:'symbol-whitespace-newline'
     },
-
     '\r':{
         token:'\r',
         def:'symbol-whitespace-carriage',
@@ -84,7 +82,21 @@ module.exports = {types:[
         }
     },
 
-//enclosure operators
+    //escape character and its derivatives
+    '\\':{
+        token:'\\',
+        def:'symbol-escape',
+        '\'':{
+            token:"\\'",
+            def:'symbol-str-escape-sgl-quote'
+        },
+        '"':{
+            token:'\\"',
+            def:'symbol-str-escape-dbl-quote'
+        }
+    },
+
+    //enclosure operators
     "(": {
         token:'(',
         def:'symbol-open-paren'
@@ -123,7 +135,7 @@ module.exports = {types:[
     },
     "'":{
         token:"'",
-        def:"symbol-str-primitive-sgl-quote"
+        def:"symbol-str-prim-sgl-quote"
     },
     ",": {
         token:',',
@@ -208,8 +220,8 @@ module.exports = {types:[
         }
     },
 
-//comparison operators
-// == 
+    //comparison operators
+    // == 
     "=": {
         token:'=',
         def:"symbol-assign",
@@ -319,7 +331,7 @@ module.exports = {types:[
         }
     },
 
-//nums - because WHY NOT
+    //nums - because WHY NOT
     "0": {
         token:'0',
         def:"bin-oct-num-hex"
@@ -361,7 +373,7 @@ module.exports = {types:[
         def:"num-hex"
     },
 
-//brute force matching: like tokens but for words
+    //brute force matching: like tokens but for words
     a:{
         token:'a',
         def:'letter-hex',
@@ -621,6 +633,4 @@ module.exports = {types:[
                         token:'while',
                         def:"statement-scope-while"
                     }}}}}
-
 };
-

@@ -61,6 +61,8 @@ function CharLexer() {
     this.i = -1;
     this.ln = 1;
     this.pos = 1;
+
+    //loop once, do it all!
     while (++this.i < this.end) {
 
         // DO NOT EDIT THISSSS ------------------------------------------------------
@@ -72,7 +74,6 @@ function CharLexer() {
         
         //determine object nesting by character, or paste known definition and token!
         if (typeof this.obj[this.char] === 'object') {
-
             //if a nest is found, seek ahead til not
             this.obj = this.obj[this.char];
             if (typeof this.obj[this.nextChar] === 'object')
@@ -84,21 +85,17 @@ function CharLexer() {
                 '',
                 '',
                 this.obj.def.indexOf( 'newline')+1
-                    ? ++this.ln : this.ln,
+                    ? ++this.ln
+                    : this.ln,
                 this.obj.def.indexOf( 'newline')+1
-                    ? (this.pos = 1, this.pos) : this.pos - this.obj.token.length 
+                    ? (this.pos = 1, this.pos) 
+                    : this.pos - this.obj.token.length 
             );
-
         }
 
         //any non-tokenized token gets pushed as a raw char token
-        else this.buffer[this.buffer.length] = 
-            new TokenMaker(this, this.char, 'char');
-
-        // DO NOT EDIT ANYTHING ABOVE!!! ---------------------------------------------
-
-        //  NOW WE CHECK TOKENS BELOW ------------------------------------------------
-
+        else this.buffer[this.buffer.length] = new TokenMaker(this, this.char, 'char');
+        
         //reset token checking scope til next loop iteration
         this.obj = this.tokenizer;
 
@@ -113,14 +110,50 @@ function CharLexer() {
         //if no screening of tokens, continue til I do
         if (!this.prevToken) continue;
 
-        //whiteSpace cleanup
-        if (this.currToken.def.indexOf('whitespace')+1) {
-            if (this.prevToken.def.indexOf('string')+1)
-                this.buffer[this.buffer.length - 2].token += this.currToken.token;
+        //comment handling
+        if(this.prevToken.def.indexOf('comment')+1){
+            //continual comment handling, if line comment, til newline, if block comment, til close
+            if((
+                //line comment til newline
+                this.prevToken.def.indexOf('unop')+1 &&
+                this.currToken.def.indexOf('newline')+1
+            ) || (
+                //block comment til
+                this.currToken.def.indexOf('close')+1 &&
+                this.currToken.def.indexOf('comment')+1 &&
+                this.prevToken.def.indexOf('open')+1
+            )) continue;
+            
+            //if still in comment, condense token and continue
+            this.buffer[this.buffer.length - 2].token += this.currToken.token;
             this.buffer.length -= 1;
             continue;
         }
-        
+
+        //string handling
+        if(this.prevToken.def.indexOf('quote')+1){
+            
+            if((
+                //complex string handling
+                this.prevToken.def.indexOf('comp')+1 &&
+                this.currToken.def.indexOf('comp')+1 &&
+                !this.currToken.def.indexOf('escape')+1
+            ) || (
+                //simple string handling til close quote
+                this.prevToken.def.indexOf('prim')+1 &&
+                this.currToken.def.indexOf('prim')+1 &&
+                !this.currToken.def.indexOf('escape')+1
+            )) continue;
+
+            //if still in string, condense token and continue
+            this.buffer[this.buffer.length - 2].token += this.currToken.token;
+            this.buffer.length -= 1;
+            continue;
+        }
+
+        // DO NOT EDIT ANYTHING ABOVE!!! ---------------------------------------------
+        // NOW WE CHECK TOKENS BELOW -------------------------------------------------
+
         //letter and char crunching
         if (
             this.currToken.def.indexOf('char')+1 ||
@@ -138,18 +171,18 @@ function CharLexer() {
 
             //handling types based on identifier context
             if (this.prevToken.def.indexOf('type')+1) {
-                for (this.type = 0; ++this.type < this.types.length;)
-                    if (!(this.prevToken.def.indexOf(this.types[this.type]) +1)) 
-                        continue;
-                    else {
+                for (this.type = 0; ++this.type < this.types.length;) 
+                    if (this.prevToken.def.indexOf(this.types[this.type]) +1) {
                         this.buffer[this.buffer.length - 1] = new TokenMaker(
                             this,
                             this.currToken.token,
                             'identifier-' + this.types[this.type]
                         );
                         break;
-                    }
+                    };
                 
+                //we already know it's an identifier with its respective type
+                //thus we can skip the rest of the checks and move on to the next char
                 continue;
             }
         }
@@ -159,28 +192,7 @@ function CharLexer() {
 
         }*/
 
-        //comment handling
-        /*if(this.prevToken.def.indexOf('comment')+1){
 
-            //line comment til
-            if(
-                this.prevToken.def.indexOf('line')+1 &&
-                this.currToken.def.indexOf('newline')+1
-            )
-                continue;
-
-            //block comment exit
-            else if(this.currToken.def.indexOf('close-comment')+1)
-                continue;
-
-            //build comment token
-            else {
-                this.buffer[this.buffer.length - 2].token += this.currToken.token;
-                this.buffer.length -= 1;
-                continue;
-            }
-            
-        }*/
         
         //operations characters based on identifier
         if(
@@ -219,6 +231,15 @@ function CharLexer() {
 
 
         // TOKEN CHECKING ZONE ABOVE ------------------------------------------------
+
+        //whiteSpace cleanup
+        if (this.currToken.def.indexOf('whitespace')+1) {
+            if (this.prevToken.def.indexOf('string')+1)
+                this.buffer[this.buffer.length - 2].token +=
+                    this.currToken.token;
+            this.buffer.length -= 1;
+            continue;
+        }
     }
 
 
