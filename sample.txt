@@ -1,7 +1,7 @@
 num age = 23 - 69;
 
 const nonNegotiable {
-    str name = 'steve';
+    str name = 'Steve \'Harvey\'';
 };
 //nonNegotiable.name
 

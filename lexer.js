@@ -132,18 +132,20 @@ function CharLexer() {
 
         //string handling
         if(this.prevToken.def.indexOf('quote')+1){
-            
-            if((
-                //complex string handling
-                this.prevToken.def.indexOf('comp')+1 &&
-                this.currToken.def.indexOf('comp')+1 &&
+            if( 
+                //as long as we don't hit an escape character, we keep condensing the string token
+                ((
+                    //complex string handling
+                    this.prevToken.def.indexOf('comp')+1 &&
+                    this.currToken.def.indexOf('comp')+1
+                ) || (
+                    //simple string handling til close quote
+                    this.prevToken.def.indexOf('prim')+1 &&
+                    this.currToken.def.indexOf('prim')+1
+                )) &&
+                this.nextChar !== this.currToken.token &&
                 !this.currToken.def.indexOf('escape')+1
-            ) || (
-                //simple string handling til close quote
-                this.prevToken.def.indexOf('prim')+1 &&
-                this.currToken.def.indexOf('prim')+1 &&
-                !this.currToken.def.indexOf('escape')+1
-            )) continue;
+            ) continue;
 
             //if still in string, condense token and continue
             this.buffer[this.buffer.length - 2].token += this.currToken.token;
