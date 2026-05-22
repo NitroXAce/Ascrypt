@@ -382,7 +382,17 @@ module.exports = {
             def:'char',
             r:{
                 token:'arr',
-                def:"type-assign-arr"
+                def:"res-type-assign-arr"
+            }}},
+    A:{
+        token:'A',
+        def:'char',
+        r:{
+            token:'Ar',
+            def:'char',
+            r:{
+                token:'Arr',
+                def:"res-typeof-Arr-Array"
             }}},
     b:{
         token:'b',
@@ -392,7 +402,7 @@ module.exports = {
             def:'char',
             n: {
                 token:'bin',
-                def:'type-assign-num-bin'
+                def:'res-type-assign-num-bin'
             }},
         o:{
             token:'bo',
@@ -402,7 +412,7 @@ module.exports = {
                 def:'char',
                 l:{
                     token:'bool',
-                    def:"type-assign-bool"
+                    def:"res-type-assign-bool"
                 }}},
         r:{
             token:'br',
@@ -415,8 +425,28 @@ module.exports = {
                     def:'char',
                     k:{
                         token:'break',
-                        def:"scope-loop-exit-break"
+                        def:"res-scope-loop-exit-break"
                     }}}}},
+    B:{
+        token:'B',
+        def:'char',
+        i:{
+            token:'Bi',
+            def:'char',
+            n: {
+                token:'Bin',
+                def:'res-typeof-Bin-Binary'
+            }},
+        o:{
+            token:'Bo',
+            def:'char',
+            o:{
+                token:'Boo',
+                def:'char',
+                l:{
+                    token:'Bool',
+                    def:"res-typeof-Bool-Boolean"
+                }}}},
     c:{
         token:'c',
         def:'letter-hex',
@@ -431,7 +461,7 @@ module.exports = {
                     def:'char',
                     t:{
                         token:'const',
-                        def:"type-assign-const"
+                        def:"res-type-assign-const"
                     }}},
             t:{
                 token:'cont',
@@ -447,7 +477,7 @@ module.exports = {
                             def:'char',
                             e: {
                                 token:'continue',
-                                def:"scope-loop-continue"
+                                def:"res-scope-loop-continue"
                             }}}}}}},
     d:{
         token:'d',
@@ -464,7 +494,7 @@ module.exports = {
                 def:'char',
                 e:{
                     token:'else',
-                    def:"statement-scope-bool-conditional-else"
+                    def:"res-statement-scope-bool-conditional-else"
                 }}},
         x:{
             token:'ex',
@@ -480,14 +510,37 @@ module.exports = {
                         def:'char',
                         t:{
                             token:'export',
-                            def:"type-module-export"
+                            def:"res-type-module-export"
                         }}}}}},
     f:{
         token:'f',
         def:'letter-hex',
+        a:{
+            token:'fa',
+            def:'char',
+            l:{
+                token:'fal',
+                def:'char',
+                s:{
+                    token:'fals',
+                    def:'char',
+                    e:{
+                        token:'false',
+                        def:"res-value-bool-false"
+                    }
+                }
+            }
+        },
         n:{
             token:'fn',
-            def:"type-assign-fn"
+            def:"res-type-assign-fn"
+        }},
+    F:{
+        token:'F',
+        def:'char',
+        n:{
+            token:'Fn',
+            def:"res-typeof-Fn-Function"
         }},
     h:{
         token:'h',
@@ -497,18 +550,18 @@ module.exports = {
             def:'char',
             x:{
                 token:'hex',
-                def:'type-assign-num-hex'
+                def:'res-type-assign-num-hex'
             }}},
     i:{
         token:'i',
         def:'char',
         f:{
             token:'if',
-            def:"scope-bool-condition-if"
+            def:"res-scope-bool-condition-if"
         },
         n:{
             token:'in',
-            def:"scope-in"
+            def:"res-scope-in"
         },
         m:{
             token:'im',
@@ -524,7 +577,7 @@ module.exports = {
                         def:'char',
                         t:{
                             token:'import',
-                            def:"type-module-import"
+                            def:"res-type-module-import"
                         }}}}}},
     n:{
         token:'n',
@@ -534,7 +587,7 @@ module.exports = {
             def:'char',
             m: {
                 token:'num',
-                def:"type-assign-num"
+                def:"res-type-assign-num"
             }}},
     o:{
         token:'o',
@@ -544,7 +597,7 @@ module.exports = {
             def:'char',
             j: {
                 token:'obj',
-                def:"type-assign-obj"
+                def:"res-type-assign-obj"
             }
         },
         c:{
@@ -552,13 +605,29 @@ module.exports = {
             def:'char',
             t: {
                 token:'oct',
-                def:'type-assign-num-oct'
+                def:'res-type-assign-num-oct'
             }
         },
         f: {
             token:'of',
-            def:"scope-of"
+            def:"res-scope-of"
         }},
+    O:{
+        token:'O',
+        def:'char',
+        c:{
+            token:'Oc',
+            def:'char',
+            t:{
+                token:'Oct',
+                def:'res-typeof-Oct-Octal'
+            }},
+        b:{
+            token:'Ob',
+            def:'char',
+            j:{
+                token:'Obj',
+                def:"res-typeof-Obj-Object"}}},
     r:{
         token:'r',
         def:'char',
@@ -576,7 +645,7 @@ module.exports = {
                         def:'char',
                         n:{
                             token:'return',
-                            def:"scope-exit-return"
+                            def:"res-scope-exit-return"
                         }}}}}},
     s:{
         token:'s',
@@ -586,11 +655,33 @@ module.exports = {
             def:'char',
             r: {
                 token:'str',
-                def:"type-assign-str"
+                def:"res-type-assign-str"
             }}},
+    S:{
+        token:'S',
+        def:'char',
+        t:{
+            token:'St',
+            def:'char',
+            r:{
+                token:'Str',
+                def:"res-typeof-Str-String"
+            }
+        }
+    },
     t:{
         token:'t',
         def:'char',
+        r:{
+            token:'tr',
+            def:'char',
+            u:{
+                token:'tru',
+                def:'char',
+                e:{
+                    token:'true',
+                    def:"res-value-bool-true"
+                }}},
         y:{
             token:'ty',
             def:'char',
@@ -599,7 +690,7 @@ module.exports = {
                 def:'char',
                 e:{
                     token:'type',
-                    def:'type-assign-newType'
+                    def:'res-type-assign-newType'
                 }
             }
         }
@@ -615,7 +706,7 @@ module.exports = {
                 def:'char',
                 d: {
                     token:'void',
-                    def:"type-assign-void"
+                    def:"res-type-assign-void"
                 }}}},
     w:{
         token:'w',
@@ -631,6 +722,6 @@ module.exports = {
                     def:'char',
                     e: {
                         token:'while',
-                        def:"statement-scope-while"
+                        def:"res-statement-scope-while"
                     }}}}}
 };

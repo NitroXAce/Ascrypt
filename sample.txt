@@ -10,33 +10,13 @@ obj Obj {
         str yeeted = 'I scream';
     };
 };
-//Obj.yeet.yeeted
-//returns 'I scream'
+/*
+    Obj.yeet.yeeted
+    returns 'I scream'
+*/
 
 //let Names:str = { boyName, girlName, parentSurname };
-str Names {
-    boyName;
-    girlName;
-    parentSurname;
-};
-
-obj Person1 {
-    num age = 22;
-    str 
-        name = 'Stacy',
-        lastName = 'Harvey',
-        says() "Hi, my name is { .name }";
-        /* says(){
-            return "Hi, my name is \{ .name \}";
-        };*/
-};
-
-Person1 {
-    const keep() "please keep me!";
-    .name = "Stevie";
-};
-
-{ name newName; says;} Person1;
+str Names { boyName; girlName; parentSurname; };
 
 type Person {
     num age = 18;

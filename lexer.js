@@ -13,15 +13,26 @@ function KeepOnly() {
     return this.result;
 }
 
-function TokenMaker() {
-    return {
-        token: arguments[1] || arguments[0].obj.token,
-        def: arguments[2] || arguments[0].obj.def,
-        ln: arguments[3] || arguments[0].ln,
-        pos: arguments[4] || arguments[0].pos
-    };
+function LexicalError() {
+    this.name = 'LexicalError';
+    this.message = 'Unexpected token';
+    this.obj = arguments[0];
 }
 
+function AssignmentError(){
+    this.obj = arguments[0];
+    this.message = 'Invalid assignment'+
+        '[' + this.obj.ln + ':' + this.obj.pos + ']: ' +
+        arguments[1];
+    return new Error(this.message);
+}
+
+function TokenMaker() {
+    this.token = arguments[1] || arguments[0].obj.token;
+    this.def = arguments[2] || arguments[0].obj.def;
+    this.ln = arguments[3] || arguments[0].ln;
+    this.pos = arguments[4] || arguments[0].pos;
+}
 
 function CharLexer() {
     //static start
@@ -37,6 +48,7 @@ function CharLexer() {
     this.obj = this.tokenizer;
     this.buffer = [];
     this.typeNest = [];
+    this.scope = [];
     this.heap = {
         //primitive types
         'bool':{},
@@ -45,16 +57,16 @@ function CharLexer() {
         'num':{},
         'hex':{},
         'str':{},
-        'const':{},
         
         //vehicular types
         'arr':{},
         'obj':{},
         'fn':{},
+        'const':{},
         
         //very complex types
         'module':{},
-        'super':{},
+        'type':{},
     };
     
     //position markers
@@ -110,70 +122,67 @@ function CharLexer() {
         //if no screening of tokens, continue til I do
         if (!this.prevToken) continue;
 
-        //comment handling
-        if(this.prevToken.def.indexOf('comment')+1){
-            //continual comment handling, if line comment, til newline, if block comment, til close
-            if((
-                //line comment til newline
-                this.prevToken.def.indexOf('unop')+1 &&
-                this.currToken.def.indexOf('newline')+1
-            ) || (
-                //block comment til
-                this.currToken.def.indexOf('close')+1 &&
-                this.currToken.def.indexOf('comment')+1 &&
-                this.prevToken.def.indexOf('open')+1
-            )) continue;
-            
-            //if still in comment, condense token and continue
-            this.buffer[this.buffer.length - 2].token += this.currToken.token;
-            this.buffer.length -= 1;
-            continue;
-        }
-
-        //string handling
-        if(this.prevToken.def.indexOf('quote')+1){
-            if( 
-                //as long as we don't hit an escape character, we keep condensing the string token
-                ((
-                    //complex string handling
-                    this.prevToken.def.indexOf('comp')+1 &&
-                    this.currToken.def.indexOf('comp')+1
+        //complete handling
+        if(!(this.prevToken.def.indexOf('complete')+1)){
+            //comment handling, if line comment, til newline, if block comment, til close
+            if(this.prevToken.def.indexOf('comment')+1){
+                //continual comment handling, if line comment, til newline, if block comment, til close
+                if((
+                    //line comment til newline
+                    this.currToken.def.indexOf('newline')+1 &&
+                    this.prevToken.def.indexOf('unop')+1
                 ) || (
-                    //simple string handling til close quote
-                    this.prevToken.def.indexOf('prim')+1 &&
-                    this.currToken.def.indexOf('prim')+1
-                )) &&
-                this.nextChar !== this.currToken.token &&
-                !this.currToken.def.indexOf('escape')+1
-            ) continue;
+                    //block comment til
+                    this.currToken.def.indexOf('close')+1 &&
+                    this.currToken.def.indexOf('comment')+1 &&
+                    this.prevToken.def.indexOf('open')+1
+                )) this.buffer[this.buffer.length - 2].def += '-complete';
+                
+                //if still in comment, condense token and continue
+                this.buffer[this.buffer.length - 2].token += this.currToken.token;
+                this.buffer.length -= 1;
+                continue;
+            }
 
-            //if still in string, condense token and continue
-            this.buffer[this.buffer.length - 2].token += this.currToken.token;
-            this.buffer.length -= 1;
-            continue;
+            //string handling
+            if(this.prevToken.def.indexOf('quote')+1){
+                //if the previous token either appended or singular
+                //and oour current token matches
+                //then we can mark the string as complete
+                if(this.prevToken.def === this.currToken.def)
+                    this.buffer[this.buffer.length - 2].def += '-complete';
+
+                //if still in string, condense token and continue
+                this.buffer[this.buffer.length - 2].token += this.currToken.token;
+                this.buffer.length -= 1;
+                continue;
+            }
+
         }
 
         // DO NOT EDIT ANYTHING ABOVE!!! ---------------------------------------------
         // NOW WE CHECK TOKENS BELOW -------------------------------------------------
+
+        
+        //lets fail reserves early as its not catching below!
+        
+        //throw error for reserved keywords used as identifiers
+        if(
+            this.prevToken.def.indexOf('assign')+1 &&
+            this.prevToken.def.indexOf('type')+1 &&
+            this.currToken.def.indexOf('res')+1
+        )
+            throw new AssignmentError(this,'Reserved keyword "' + this.currToken.token + '" cannot be used as an identifier');
 
         //letter and char crunching
         if (
             this.currToken.def.indexOf('char')+1 ||
             this.currToken.def.indexOf('letter')+1
         ) {
-            //append to a current identifier or string
-            if (
-                this.prevToken.def.indexOf('identifier')+1 ||
-                this.prevToken.def.indexOf('string')+1
-            ) {
-                this.buffer[this.buffer.length - 2].token += this.currToken.token;
-                this.buffer.length -= 1;
-                continue;
-            }
-
             //handling types based on identifier context
             if (this.prevToken.def.indexOf('type')+1) {
-                for (this.type = 0; ++this.type < this.types.length;) 
+                this.type = 0;
+                while( ++this.type < this.types.length ) 
                     if (this.prevToken.def.indexOf(this.types[this.type]) +1) {
                         this.buffer[this.buffer.length - 1] = new TokenMaker(
                             this,
@@ -187,6 +196,15 @@ function CharLexer() {
                 //thus we can skip the rest of the checks and move on to the next char
                 continue;
             }
+
+            //append to a current identifier or string
+            if (this.prevToken.def.indexOf('identifier')+1) {
+                this.buffer[this.buffer.length - 2].token += this.currToken.token;
+                this.buffer.length -= 1;
+                continue;
+            }
+
+            
         }
 
         //string handling
@@ -253,31 +271,3 @@ module.exports = {
     CharLexer:CharLexer,
     KeepOnly: KeepOnly
 }
-
-
-/*class Lexer {
-    tokens = [];
-    tokenType = {};
-    tokenStart = -1;
-    tokenEnd = 0;
-    currentLine = 0;
-    currentCol = 0;
-
-    constructor(buffer) {
-        this.buffer = buffer ?? '';
-    }
-
-    advance() {
-        if (this.tokenEnd === this.buffer.length)
-            return false;
-
-        this.tokenStart = this.tokenEnd;
-        const directorChar = this.buffer[this.tokenStart];
-        switch (directorChar) {
-
-        }
-
-        return true;
-    }
-
-}*/
