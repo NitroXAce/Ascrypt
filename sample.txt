@@ -5,7 +5,7 @@ const nonNegotiable {
 };
 //nonNegotiable.name
 
-obj Objs {
+obj object {
     yeet {
         str yeeted = 'I scream';
     };
@@ -15,8 +15,41 @@ obj Objs {
     returns 'I scream'
 */
 
-//let Names:str = { boyName, girlName, parentSurname };
-str Names { boyName; girlName; parentSurname; };
+str scream = 'I have a mouth and I must scream';
+
+/* I am code block
+let Names: { boyName: string; girlName: string; parentSurname: string } = { 
+    boyName, 
+    girlName, 
+    parentSurname 
+};
+*/
+
+str Names { 
+    boyName;
+    girlName;
+    parentSurname;
+};
+
+Names === Str{}
+//typeof "string"
+//Str
+
+//this is considered cross-contamination
+//where the parent obj is a string based obj
+Names {
+    num age = 55;
+};
+
+obj Names {
+    str boyName, girlName, parentSurname;
+};
+
+//this is acceptable to parent type object
+//as objects are more forgiving to mix children types
+Names {
+    num age = 55;
+};
 
 type Person {
     num age = 18;
@@ -34,21 +67,6 @@ Person Employees {
         .name = 'Stacy';
         .lastName = 'Studier';
     };
-};
-
-obj Employees {
-    Person 
-        Steve {
-            .age = 44;
-            .name = 'Steve';
-            .lastName = 'Harvey';
-        },
-        Stacy {
-            .age = 22;
-            .name = 'Stacy';
-            .lastName = 'Studier';
-        }
-    ;
 };
 
 Person Employees [

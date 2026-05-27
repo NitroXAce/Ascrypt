@@ -435,7 +435,21 @@ module.exports = {
             def:'char',
             n: {
                 token:'Bin',
-                def:'res-typeof-Bin-Binary'
+                def:'res-typeof-Bin-Binary',
+                '{':{
+                    error:'SyntaxError: Malformed token, expected \'}\' after "Bin"',
+                    '}':{
+                        token:'Bin{}',
+                        def:'res-typeof-Bin-Binary-Collection'
+                    }
+                },
+                '[':{
+                    error:'SyntaxError: Malformed token, expected \']\' after "Bin"',
+                    ']':{
+                        token:'Bin[]',
+                        def:'res-typeof-Bin-Binary-List'
+                    }
+                }
             }},
         o:{
             token:'Bo',
@@ -445,7 +459,21 @@ module.exports = {
                 def:'char',
                 l:{
                     token:'Bool',
-                    def:"res-typeof-Bool-Boolean"
+                    def:"res-typeof-Bool-Boolean",
+                    '{':{
+                        error:'SyntaxError: Malformed token, expected \'}\' after "Bool"',
+                        '}':{
+                            token:'Bool{}',
+                            def:'res-typeof-Bool-Boolean-Collection'
+                        }
+                    },
+                    '[':{
+                        error:'SyntaxError: Malformed token, expected \']\' after "Bool"',
+                        ']':{
+                            token:'Bool[]',
+                            def:'res-typeof-Bool-Boolean-List'
+                        }
+                    }
                 }}}},
     c:{
         token:'c',
@@ -620,14 +648,29 @@ module.exports = {
             def:'char',
             t:{
                 token:'Oct',
-                def:'res-typeof-Oct-Octal'
+                def:'res-typeof-Oct-Octal',
+                '{':{
+                    error:'SyntaxError: Malformed token, expected \'}\' after "Oct"',
+                    '}':{
+                        token:'Oct{}',
+                        def:'res-typeof-Oct-Octal-Collection'
+                    }
+                },
+                '[':{
+                    error:'SyntaxError: Malformed token, expected \']\' after "Oct"',
+                    ']':{
+                        token:'Oct[]',
+                        def:'res-typeof-Oct-Octal-List'
+                    }
+                }
             }},
         b:{
             token:'Ob',
             def:'char',
             j:{
                 token:'Obj',
-                def:"res-typeof-Obj-Object"}}},
+                def:"res-typeof-Obj-Object"
+            }}},
     r:{
         token:'r',
         def:'char',
@@ -665,7 +708,21 @@ module.exports = {
             def:'char',
             r:{
                 token:'Str',
-                def:"res-typeof-Str-String"
+                def:"res-typeof-Str-String",
+                '{':{
+                    error:'SyntaxError: Malformed token, expected \'}\' after "Str"',
+                    '}':{
+                        token:'Str{}',
+                        def:'res-typeof-Str-String-Collection'
+                    }
+                },
+                '[':{
+                    error:'SyntaxError: Malformed token, expected \']\' after "Str"',
+                    ']':{
+                        token:'Str[]',
+                        def:'res-typeof-Str-String-List'
+                    }
+                }
             }
         }
     },

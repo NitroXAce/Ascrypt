@@ -26,7 +26,12 @@ function AssignmentError(){
     this.message = 'Invalid assignment'+
         '[' + this.obj.ln + ':' + this.obj.pos + ']: ' +
         arguments[1];
-    return new Error(this.message);
+    throw new Error(this.message);
+}
+
+function EOFError() {
+    this.message = 'Unexpected end of file';
+    throw new Error(this.message);
 }
 
 function TokenMaker() {
@@ -124,6 +129,17 @@ function CharLexer() {
         //if no screening of tokens, continue til I do
         if (!this.prevToken) continue;
 
+        //bumber crunching tokens
+        if(
+            this.prevToken.def.indexOf('hex')+1  &&
+            this.currToken.def.indexOf('hex')+1
+        ) {
+            this.buffer[this.buffer.length - 2].token += this.currToken.token;
+            this.buffer.length -= 1;
+            if(this.nextChar) continue;
+            else throw new EOFError();
+        }
+
         //complete handling
         if(!(this.prevToken.def.indexOf('complete')+1)){
             //comment handling, if line comment, til newline, if block comment, til close
@@ -143,7 +159,11 @@ function CharLexer() {
                 //if still in comment, condense token and continue
                 this.buffer[this.buffer.length - 2].token += this.currToken.token;
                 this.buffer.length -= 1;
-                continue;
+
+                if(this.prevToken.def.indexOf('complete')+1)
+                    this.buffer.length -= 1;
+                if(this.nextChar) continue;
+                else throw new EOFError();
             }
 
             //string handling
@@ -157,9 +177,9 @@ function CharLexer() {
                 //if still in string, condense token and continue
                 this.buffer[this.buffer.length - 2].token += this.currToken.token;
                 this.buffer.length -= 1;
-                continue;
+                if(this.nextChar) continue;
+                else throw new EOFError();
             }
-
         }
 
         //early whiteSpace cleanup
@@ -171,90 +191,103 @@ function CharLexer() {
         // DO NOT EDIT ANYTHING ABOVE!!! ---------------------------------------------
         // NOW WE CHECK TOKENS BELOW -------------------------------------------------
 
-        //letter and char crunching
-        if (
-            this.currToken.def.indexOf('char')+1 ||
-            this.currToken.def.indexOf('letter')+1
-        ) {
-            //handling types based on identifier context
-            if (this.prevToken.def.indexOf('type')+1) {
-                //lets fail reserves early as its not catching below!
-                //throw error for reserved keywords used as identifiers
-                if(
-                    this.currToken.def.indexOf('res')+1 ||
-                    this.nextChar && (
-                        this.nextChar === '=' ||
-                        this.nextChar === '(' ||
-                        this.nextChar === '{' ||
-                        this.nextChar === '['
-                    )
-                )
-                    throw new AssignmentError(this,'Reserved keyword "' + this.currToken.token + '" cannot be used as an identifier');
+        //handling types based on identifier context
+        if (this.prevToken.def.indexOf('type')+1) {
 
-                this.type = 0;
-                while( ++this.type < this.types.length ) 
-                    if (this.prevToken.def.indexOf(this.types[this.type]) +1) {
-                        this.buffer[this.buffer.length - 1] = new TokenMaker(
-                            this,
-                            this.currToken.token,
-                            'identifier-' + this.types[this.type]
-                        );
-                        break;
-                    };
-                
-                //we already know it's an identifier with its respective type
-                //thus we can skip the rest of the checks and move on to the next char
-                continue;
-            }
-
-            //append to a current identifier or string
-            if (this.prevToken.def.indexOf('identifier')+1) {
-                this.buffer[this.buffer.length - 2].token += this.currToken.token;
-                this.buffer.length -= 1;
-                continue;
-            }
-
+            //handle assignment errors based on reserved keywords, symbols, and numbers
+            if((
+                this.currToken.def.indexOf('res')+1 ||
+                this.currToken.def.indexOf('symbol')+1 ||
+                this.currToken.def.indexOf('num')+1
+            ) && (
+                this.nextChar === '=' ||
+                this.nextChar === '(' ||
+                this.nextChar === '{' ||
+                this.nextChar === '[' ||
+                this.nextChar === ' ' ||
+                this.nextChar === '\n' ||
+                this.nextChar === '\r\n'
+            )) throw new AssignmentError(
+                this,
+                'Reserved keyword, Symbol, or Number token "' +
+                this.currToken.token +
+                '" cannot be used as an identifier'
+            );
             
+            //create a new identifier and append its type based on the current token
+            this.type = 0;
+            while( ++this.type < this.types.length ) 
+                if (this.prevToken.def.indexOf(this.types[this.type]) +1) {
+                    this.buffer[this.buffer.length - 1] = new TokenMaker(
+                        this,
+                        this.currToken.token,
+                        'identifier-' + this.types[this.type]
+                    );
+                    break;
+                };
+            
+            //we already know it's an identifier with its respective type
+            //thus we can skip the rest of the checks and move on to the next char
+            if(this.nextChar) continue;
+            else throw new EOFError();
         }
 
-        //string handling
-        /*if(this.prevToken.def.indexOf('quote')+1){
+        //identifier context handling
+        if(this.prevToken.def.indexOf('identifier')+1){
+            //letter and char crunching
+            //append to a current identifier or string
+            if (
+                this.currToken.def.indexOf('char')+1 ||
+                this.currToken.def.indexOf('letter')+1
+            ) {
+                this.buffer[this.buffer.length - 2].token += this.currToken.token;
+                this.buffer.length -= 1;
+                if(this.nextChar) continue;
+                else throw new EOFError();
+            }
 
-        }*/
+            //operations characters based on identifier
+            if(
+                this.currToken.def.indexOf('open')+1 ||
+                this.currToken.token === '=' 
+            ){
 
-
-        
-        //operations characters based on identifier
-        if(
-            this.currToken.def.indexOf('open')+1
-        ){
-            //comment context
-
-            //identifier context
-            /*if(this.prevToken.def.indexOf('identifier')+1){
+                //identifier context
                 //function definition/call
                 if(this.currToken.def.indexOf('paren')+1){
-                    
+                    this.buffer[this.buffer.length - 1].def += '-fn';
+                    this.scope[this.scope.length] = this.currToken.def;
+                    if(this.nextChar) continue;
+                    else throw new EOFError();
                 }
                 
                 //object definiton/call
                 if(this.currToken.def.indexOf('curly')+1){
-                    
+                    this.buffer[this.buffer.length - 1].def += '-obj';
+                    this.scope[this.scope.length] = this.currToken.def;
+                    if(this.nextChar) continue;
+                    else throw new EOFError();
                 }
                 
                 //array definition/call
                 if(this.currToken.def.indexOf('square')+1){
-                    
+                    this.buffer[this.buffer.length - 1].def += '-arr';
+                    this.scope[this.scope.length] = this.currToken.def;
+                    if(this.nextChar) continue;
+                    else throw new EOFError();
                 }
                 
                 //assignments
                 if(this.currToken.def.indexOf('assign')+1){
-                    
+                    this.buffer[this.buffer.length - 1].def += '-assign';
+                    if(this.nextChar) continue;
+                    else throw new EOFError();
                 }
-            }*/
-            
-            
+                
+            }
         }
+
+        
         
         //lets check for symbols prior to condensing child identifiers
         //if (!this.pprevToken) continue;
@@ -266,7 +299,10 @@ function CharLexer() {
     }
 
 
-    return this.buffer;
+    return new function(){
+        this.buffer = arguments[0].buffer;
+        this.heap = arguments[0].heap;
+    }(this);
 }
 
 

@@ -3,7 +3,7 @@ file ::
 
 block ::
     exp | 
-    '{' statements [  ] '}' |
+    '{' statements '}' |
     '(' { exp ',' } [ exp ] ')'
 
 statements ::
@@ -14,7 +14,7 @@ statement ::
     assign |
     'break' |
     'continue' |
-    'return' exp |
+    'return' [ exp | statement.if ] |
     'throw' exp |
     'if' '(' exp ')' block [
         { 'else' 'if' '(' exp ')' block } 'else' block
@@ -34,7 +34,7 @@ exp ::
     ]
 
 assignment ::
-    [types] {assign ','} assign 
+    [types | '.'] {assign ','} assign 
 
     /* SEMANTIC RULE: Child type definitions
     - a child of the parent may share the type
@@ -95,6 +95,11 @@ assign ::
             '>>' | '<<' | '>>>' | '<<<' | '~'
         ] '=' exp |
     
+        /* SEMANTIC RULE: Prefix Assignment Operators
+            these kinds of operators would be done during the expression step
+            whereas '=' is mandatory for the assignment step
+        */
+
         //object
         '{' [ { assignment ';' } assignment ';' ] '}' |
     
