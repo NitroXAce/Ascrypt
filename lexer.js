@@ -287,7 +287,7 @@ function CharLexer() {
             }
         }
 
-        
+
         
         //lets check for symbols prior to condensing child identifiers
         //if (!this.pprevToken) continue;
@@ -299,10 +299,7 @@ function CharLexer() {
     }
 
 
-    return new function(){
-        this.buffer = arguments[0].buffer;
-        this.heap = arguments[0].heap;
-    }(this);
+    return new KeepOnly(this,['buffer','heap']);
 }
 
 
