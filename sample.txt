@@ -5,7 +5,7 @@ const nonNegotiable {
 };
 //nonNegotiable.name
 
-obj Obj {
+obj Objs {
     yeet {
         str yeeted = 'I scream';
     };

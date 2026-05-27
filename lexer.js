@@ -1,14 +1,16 @@
 function KeepOnly() {
     this.result = {};
 
+    if (arguments[1].length === 0)
+        return this.result;
+    
+    if (arguments[1].length === 1)
+        return this.result[arguments[1][0]];
+
     for (this.i in arguments[0])
         for (this.j in arguments[1])
-            if (this.i === arguments[1][this.j]){
+            if (this.i === arguments[1][this.j])
                 this.result[this.i] = arguments[0][this.i];
-                if (arguments[1].length === 1)
-                    return this.result[arguments[1][0]];
-                else continue;
-            }
 
     return this.result;
 }
@@ -160,19 +162,14 @@ function CharLexer() {
 
         }
 
+        //early whiteSpace cleanup
+        if (this.currToken.def.indexOf('whitespace')+1) {
+            this.buffer.length -= 1;
+            continue;
+        }
+
         // DO NOT EDIT ANYTHING ABOVE!!! ---------------------------------------------
         // NOW WE CHECK TOKENS BELOW -------------------------------------------------
-
-        
-        //lets fail reserves early as its not catching below!
-        
-        //throw error for reserved keywords used as identifiers
-        if(
-            this.prevToken.def.indexOf('assign')+1 &&
-            this.prevToken.def.indexOf('type')+1 &&
-            this.currToken.def.indexOf('res')+1
-        )
-            throw new AssignmentError(this,'Reserved keyword "' + this.currToken.token + '" cannot be used as an identifier');
 
         //letter and char crunching
         if (
@@ -181,6 +178,19 @@ function CharLexer() {
         ) {
             //handling types based on identifier context
             if (this.prevToken.def.indexOf('type')+1) {
+                //lets fail reserves early as its not catching below!
+                //throw error for reserved keywords used as identifiers
+                if(
+                    this.currToken.def.indexOf('res')+1 ||
+                    this.nextChar && (
+                        this.nextChar === '=' ||
+                        this.nextChar === '(' ||
+                        this.nextChar === '{' ||
+                        this.nextChar === '['
+                    )
+                )
+                    throw new AssignmentError(this,'Reserved keyword "' + this.currToken.token + '" cannot be used as an identifier');
+
                 this.type = 0;
                 while( ++this.type < this.types.length ) 
                     if (this.prevToken.def.indexOf(this.types[this.type]) +1) {
@@ -252,14 +262,7 @@ function CharLexer() {
 
         // TOKEN CHECKING ZONE ABOVE ------------------------------------------------
 
-        //whiteSpace cleanup
-        if (this.currToken.def.indexOf('whitespace')+1) {
-            if (this.prevToken.def.indexOf('string')+1)
-                this.buffer[this.buffer.length - 2].token +=
-                    this.currToken.token;
-            this.buffer.length -= 1;
-            continue;
-        }
+        
     }
 
 

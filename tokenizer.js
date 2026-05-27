@@ -66,7 +66,7 @@ module.exports = {
     },
     ' ':{
         token:' ',
-        def:'symbol-whitespace-space'
+        def:'symbol-whitespace-space-char'
     },
     '\n':{
         token:'\n',
