@@ -129,21 +129,12 @@ function CharLexer() {
         //if no screening of tokens, continue til I do
         if (!this.prevToken) continue;
 
-        //bumber crunching tokens
-        if(
-            this.prevToken.def.indexOf('hex')+1  &&
-            this.currToken.def.indexOf('hex')+1
-        ) {
-            this.buffer[this.buffer.length - 2].token += this.currToken.token;
-            this.buffer.length -= 1;
-            if(this.nextChar) continue;
-            else throw new EOFError();
-        }
-
         //complete handling
         if(!(this.prevToken.def.indexOf('complete')+1)){
+
             //comment handling, if line comment, til newline, if block comment, til close
             if(this.prevToken.def.indexOf('comment')+1){
+
                 //continual comment handling, if line comment, til newline, if block comment, til close
                 if((
                     //line comment til newline
@@ -160,8 +151,10 @@ function CharLexer() {
                 this.buffer[this.buffer.length - 2].token += this.currToken.token;
                 this.buffer.length -= 1;
 
+                //remove comment tokens from buffer, if complete, and continue
                 if(this.prevToken.def.indexOf('complete')+1)
                     this.buffer.length -= 1;
+                
                 if(this.nextChar) continue;
                 else throw new EOFError();
             }
@@ -186,6 +179,14 @@ function CharLexer() {
         if (this.currToken.def.indexOf('whitespace')+1) {
             this.buffer.length -= 1;
             continue;
+        }
+
+        //number crunching tokens
+        if(this.prevToken.def.indexOf('hex')+1 && this.currToken.def.indexOf('hex')+1) {
+            this.buffer[this.buffer.length - 2].token += this.currToken.token;
+            this.buffer.length -= 1;
+            if(this.nextChar) continue;
+            else throw new EOFError();
         }
 
         // DO NOT EDIT ANYTHING ABOVE!!! ---------------------------------------------
@@ -216,8 +217,8 @@ function CharLexer() {
             
             //create a new identifier and append its type based on the current token
             this.type = 0;
-            while( ++this.type < this.types.length ) 
-                if (this.prevToken.def.indexOf(this.types[this.type]) +1) {
+            while(++this.type < this.types.length) 
+                if (this.prevToken.def.indexOf(this.types[this.type])+1) {
                     this.buffer[this.buffer.length - 1] = new TokenMaker(
                         this,
                         this.currToken.token,
@@ -297,7 +298,6 @@ function CharLexer() {
 
         
     }
-
 
     return new KeepOnly(this,['buffer','heap']);
 }

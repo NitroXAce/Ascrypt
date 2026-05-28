@@ -31,10 +31,6 @@ str Names {
     parentSurname;
 };
 
-Names === Str{}
-//typeof "string"
-//Str
-
 //this is considered cross-contamination
 //where the parent obj is a string based obj
 Names {

@@ -83,8 +83,17 @@ TypePrimitive :: oneOf
     'const'
     identifier?super
 
+TypeofTypes ::
+    'Arr' | 'Obj' | 'Fn' | 'Void' |
+    'Str' | 'Str[]' | 'Str{}' |
+    'Num' | 'Num[]' | 'Num{}' |
+    'Bin' | 'Bin[]' | 'Bin{}' |
+    'Oct' | 'Oct[]' | 'Oct{}' |
+    'Hex' | 'Hex[]' | 'Hex{}' |
+
+
 types::
-    TypePrimitive | child | modules
+    TypePrimitive | child | modules | TypeofTypes
 
 assign ::
     identifier (
