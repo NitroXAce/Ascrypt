@@ -1,72 +1,49 @@
-function CleanProto(value){
-    if (typeof value === 'boolean'){
-        this.result = new Boolean(value);
-        this.result.__proto__ = null;
-        return this.result;
-    }
-
-    
-}
-
-function KeepOnly(that,mod){
+function KeepOnly() {
     this.result = {};
-    this.__proto__ = null;
-    that.__proto__ = null;
-    mod.__proto__ = null;
-    this.result.__proto__ = null;
 
-    if (mod.length === 0)
+    if (arguments[1].length === 0)
         return this.result;
     
-    if (mod.length === 1)
-        return this.result[mod[0]] = that[mod[0]];
+    if (arguments[1].length === 1)
+        return this.result[arguments[1][0]];
 
-    for (this.i in Object.keys(that))
-        for (this.j in mod)
-            if (this.i === mod[this.j])
-                this.result[Object.keys(that)[this.i]] = that[Object.keys(that)[this.i]];
+    for (this.i in arguments[0])
+        for (this.j in arguments[1])
+            if (this.i === arguments[1][this.j])
+                this.result[this.i] = arguments[0][this.i];
 
     return this.result;
 }
 
-function LexicalError(that){
-    this.__proto__ = null;
+function LexicalError() {
     this.name = 'LexicalError';
     this.message = 'Unexpected token';
-    this.obj = that;
-    for(this.key in this)
-        if(+this.key === NaN)
-            this[this.key].__proto__ = null;
+    this.obj = arguments[0];
 }
 
-function AssignmentError(that,message){
-    this.__proto__ = null;
-    this.obj = that;
+function AssignmentError(){
+    this.obj = arguments[0];
     this.message = 'Invalid assignment'+
         '[' + this.obj.ln + ':' + this.obj.pos + ']: ' +
-        message;
+        arguments[1];
     throw new Error(this.message);
 }
 
-function EOFError(that){
-    this.__proto__ = null;
+function EOFError() {
     this.message = 'Unexpected end of file';
     throw new Error(this.message);
 }
 
-function TokenMaker(that, token, def, ln, pos){
-    this.__proto__ = null;
-    this.token = token || that.obj.token;
-    this.def = def || that.obj.def;
-    this.ln = ln || that.ln;
-    this.pos = pos || that.pos;
-    for(this.key in this)
-        this[this.key].__proto__ = null;
+function TokenMaker() {
+    this.token = arguments[1] || arguments[0].obj.token;
+    this.def = arguments[2] || arguments[0].obj.def;
+    this.ln = arguments[3] || arguments[0].ln;
+    this.pos = arguments[4] || arguments[0].pos;
 }
 
-function CharLexer(that){
+function CharLexer() {
     //static start
-    this.src = that.split('') || "";
+    this.src = arguments[0].split('') || "";
     this.tokenizer = require('./tokenizer.js');
     this.types = this.tokenizer.types;
     this.end = this.src.length;
@@ -79,7 +56,7 @@ function CharLexer(that){
     this.buffer = [];
     this.typeNest = [];
     this.scope = [];
-    this.global = {
+    this.heap = {
         //primitive types
         'bool':{},
         'bin':{},
@@ -87,7 +64,6 @@ function CharLexer(that){
         'num':{},
         'hex':{},
         'str':{},
-        'void':{},
         
         //vehicular types
         'arr':{},
@@ -99,14 +75,6 @@ function CharLexer(that){
         'module':{},
         'type':{},
     };
-
-    /*
-    for (this.type in this.global)
-        if(this.global[this.type][identifier])
-            return this.global[this.type][identifier];
-
-    return new Error('Undefined identifier "' + identifier + '"');
-    */
     
     //position markers
     this.i = -1;
@@ -161,12 +129,21 @@ function CharLexer(that){
         //if no screening of tokens, continue til I do
         if (!this.prevToken) continue;
 
+        //bumber crunching tokens
+        if(
+            this.prevToken.def.indexOf('hex')+1  &&
+            this.currToken.def.indexOf('hex')+1
+        ) {
+            this.buffer[this.buffer.length - 2].token += this.currToken.token;
+            this.buffer.length -= 1;
+            if(this.nextChar) continue;
+            else throw new EOFError();
+        }
+
         //complete handling
         if(!(this.prevToken.def.indexOf('complete')+1)){
-
             //comment handling, if line comment, til newline, if block comment, til close
             if(this.prevToken.def.indexOf('comment')+1){
-
                 //continual comment handling, if line comment, til newline, if block comment, til close
                 if((
                     //line comment til newline
@@ -183,10 +160,8 @@ function CharLexer(that){
                 this.buffer[this.buffer.length - 2].token += this.currToken.token;
                 this.buffer.length -= 1;
 
-                //remove comment tokens from buffer, if complete, and continue
                 if(this.prevToken.def.indexOf('complete')+1)
                     this.buffer.length -= 1;
-                
                 if(this.nextChar) continue;
                 else throw new EOFError();
             }
@@ -213,32 +188,11 @@ function CharLexer(that){
             continue;
         }
 
-        //number crunching tokens
-        /*if(this.prevToken.def.indexOf('hex')+1 && this.currToken.def.indexOf('hex')+1) {
-            this.buffer[this.buffer.length - 2].token += this.currToken.token;
-            this.buffer.length -= 1;
-            if(this.nextChar) continue;
-            else throw new EOFError();
-        }*/
-
         // DO NOT EDIT ANYTHING ABOVE!!! ---------------------------------------------
         // NOW WE CHECK TOKENS BELOW -------------------------------------------------
 
         //handling types based on identifier context
         if (this.prevToken.def.indexOf('type')+1) {
-
-            //handle identifier missing errors
-            if(
-                this.currToken.token === '=' ||
-                this.currToken.token === '(' ||
-                this.currToken.token === '{' ||
-                this.currToken.token === '['
-            ) throw new AssignmentError(
-                this,
-                'Expected identifier after type declaration, got "' +
-                this.currToken.token +
-                '"'
-            );
 
             //handle assignment errors based on reserved keywords, symbols, and numbers
             if((
@@ -249,7 +203,10 @@ function CharLexer(that){
                 this.nextChar === '=' ||
                 this.nextChar === '(' ||
                 this.nextChar === '{' ||
-                this.nextChar === '[' 
+                this.nextChar === '[' ||
+                this.nextChar === ' ' ||
+                this.nextChar === '\n' ||
+                this.nextChar === '\r\n'
             )) throw new AssignmentError(
                 this,
                 'Reserved keyword, Symbol, or Number token "' +
@@ -259,8 +216,8 @@ function CharLexer(that){
             
             //create a new identifier and append its type based on the current token
             this.type = 0;
-            while(++this.type < this.types.length) 
-                if (this.prevToken.def.indexOf(this.types[this.type])+1) {
+            while( ++this.type < this.types.length ) 
+                if (this.prevToken.def.indexOf(this.types[this.type]) +1) {
                     this.buffer[this.buffer.length - 1] = new TokenMaker(
                         this,
                         this.currToken.token,
@@ -289,19 +246,11 @@ function CharLexer(that){
                 else throw new EOFError();
             }
 
-            //assignments
+            //operations characters based on identifier
             if(
-                this.currToken.def.indexOf('assign')+1 &&
-                this.currToken.token === '='
+                this.currToken.def.indexOf('open')+1 ||
+                this.currToken.token === '=' 
             ){
-                this.buffer[this.buffer.length - 1].def += '-assign';
-                if(this.nextChar) continue;
-                else throw new EOFError();
-            }
-
-            //operations characters based on identifier 
-            //open for function calls/definitions, object definitions/calls, array definitions/calls, and assignments
-            if(this.currToken.def.indexOf('open')+1){
 
                 //identifier context
                 //function definition/call
@@ -328,6 +277,13 @@ function CharLexer(that){
                     else throw new EOFError();
                 }
                 
+                //assignments
+                if(this.currToken.def.indexOf('assign')+1){
+                    this.buffer[this.buffer.length - 1].def += '-assign';
+                    if(this.nextChar) continue;
+                    else throw new EOFError();
+                }
+                
             }
         }
 
@@ -341,6 +297,7 @@ function CharLexer(that){
 
         
     }
+
 
     return new KeepOnly(this,['buffer','heap']);
 }
