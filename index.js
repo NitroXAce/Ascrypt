@@ -7,3 +7,5 @@ var
 
 console.log(new CharLexer(inputStr));
 //new CharLexer(inputStr);
+
+console.log(process.memoryUsage().heapUsed);

@@ -5,14 +5,12 @@
         token:'',
         def:'char'
     },*/
-
-
     /*"\\": {
         '': {
             token: '\\',
             def: 'str-regex-escape-char'
         },
-        'x': function (primaryHex, secondaryHex) {
+        'x': fn (primaryHex, secondaryHex) {
             this.hexList = '0123456789abcdef';
             this.boolSet = [0, 0];
             for (this.hex in this.hexList)
@@ -26,7 +24,7 @@
                 error: 'TokenError: this current token does not match its parameters, try again!'
             };
         },
-        'u': function (hexA, hexB, hexC, hexD) {
+        'u': fn (hexA, hexB, hexC, hexD) {
             this.hexList = '0123456789abcdef';
             this.boolSet = [0, 0, 0, 0];
             for (this.hex in this.hexList)
@@ -47,313 +45,328 @@
         },
     },*/
 
+    //whitespace PLEASE FORGIVE ME!!!
+    '':{
+        token:'',
+        def:'please-god-why'
+    },
+    ' ':{
+        token:' ',
+        def:'symbol-whitespace-space-char'
+    },
+    '\n':{
+        token:'\n',
+        def:'symbol-whitespace-newline'
+    },
+    '\r':{
+        token:'\r',
+        def:'symbol-whitespace-carriage',
+        '\n':{
+            token:'\r\n',
+            def:'symbol-whitespace-carriage-newline',
+            pos:1
+        }
+    },
+    '\t':{
+        token:'\t',
+        def:'symbol-whitespace-tab'
+    },
+
+    //escape character and its derivatives
+    '\\':{
+        token:'\\',
+        def:'symbol-escape',
+        '\'':{
+            token:"\\'",
+            def:'symbol-str-escape-sgl-quote'
+        },
+        '"':{
+            token:'\\"',
+            def:'symbol-str-escape-dbl-quote'
+        }
+    },
 
     //enclosure operators
     "(": {
         token:'(',
-        def:'open-paren'
+        def:'symbol-open-paren'
     },
     ")": {
         token:')',
-        def:'close-paren'
+        def:'symbol-close-paren'
     },
     "[": {
         token:'[',
-        def:"open-square"
+        def:"symbol-open-square"
     },
     "]": {
         token:']',
-        def:"close-square"
+        def:"symbol-close-square"
     },
     "{": {
         token:'{',
-        def:"open-curly"
+        def:"symbol-open-curly"
     },
     "}": {
         token:'}',
-        def:"close-curly"
+        def:"symbol-close-curly"
     },
     ";": {
         token:';',
-        def:"semicolon"
+        def:"symbol-semicolon"
     },
     ":": {
         token:':',
-        def:"logic-colon-false"
+        def:"symbol-logic-colon-false"
     },
     '"': {
         token:'"',
-        def:"str-comp-dbl-quote"
+        def:"symbol-str-comp-dbl-quote"
     },
     "'":{
         token:"'",
-        def:"str-primitive-sgl-quote"
+        def:"symbol-str-prim-sgl-quote"
     },
     ",": {
         token:',',
-        def: "comma"
+        def: "symbol-comma"
     },
     ".": {
         token:'.',
-        def:"type-assign-child-dot",
+        def:"symbol-identifier-assign-num-child-dot",
         ".": {
             token:"..",
-            def:"num-range",
+            def:"symbol-num-range",
             ".": {
                 token:'...',
-                def:"assign-spread-rest-arr-fn"
-            },
-        },
+                def:"symbol-assign-spread-rest-arr-fn-num-range-exclusive"
+            }
+        }
     },
-
-
+    
     //arithmetic operators prefix
     "+": {
         token:'+',
-        def:"math-add",
+        def:"symbol-math-add",
         "=": {
             token:'+=',
-            def:"math-self-add"
+            def:"symbol-math-self-add"
         },
         "+": {
             token:'++',
-            def:"unop-cycle-increment"
-        },
+            def:"symbol-unop-cycle-increment"
+        }
     },
     "-": {
         token:'-',
-        def:"math-subtract",
+        def:"symbol-math-subtract",
         "=": {
             token:'-=',
-            def:"math-self-subtract"
+            def:"symbol-math-self-subtract"
         },
         "-": {
             token:'--',
-            def:"unop-cycle-decriment"
+            def:"symbol-unop-cycle-decriment"
         }
     },
     "*": {
         token:'*',
-        def:"math-multiply",
+        def:"symbol-math-multiply",
         "=": {
             token:'*=',
-            def:"math-self-multiply"
+            def:"symbol-math-self-multiply"
         },
         "*": {
             token:'**',
-            def:"math-power"
+            def:"symbol-math-power"
         },
         "/": {
-            token:'/*',
-            def:"close-comment"
-        },
+            token:'*/',
+            def:"symbol-close-comment"
+        }
     },
     "/": {
         token:'/',
-        def:"math-divide",
+        def:"symbol-math-divide",
         "=": {
             token:'/=',
-            def:"math-self-divide"
+            def:"symbol-math-self-divide"
         },
         "/": {
             token:'//',
-            def:"unop-line-comment"
+            def:"symbol-unop-line-comment"
         },
         "*": {
             token:'/*',
-            def:"open-comment"
-        },
+            def:"symbol-open-comment"
+        }
     },
     "%": {
         token:'%',
-        def:"math-modulus",
+        def:"symbol-math-modulus",
         "=": {
             token:'%=',
-            def:"math-self-modulus"
-        },
+            def:"symbol-math-self-modulus"
+        }
     },
 
     //comparison operators
     // == 
     "=": {
         token:'=',
-        def:"assign",
+        def:"symbol-assign",
         "=": {
             token:'==',
-            def:"logic-strict-equal"
+            def:"symbol-logic-strict-equal"
         }
     },
     "!": {
         token:'!',
-        def:"unop-logic-not",
+        def:"symbol-unop-logic-not",
         "=": {
             token:'!=',
-            def:"logic-not-equal"
+            def:"symbol-logic-not-equal"
         },
         "!": {
             token:'!!',
-            def:"unop-logic-absolute-boolean"
-        },
+            def:"symbol-unop-logic-absolute-bool"
+        }
     },
     "?": {
         token:'?',
-        def:"logic-ternary-true",
+        def:"symbol-logic-ternary-true",
         ".": {
             token:'?.',
-            def:"logic-optional-chain"
+            def:"symbol-logic-optional-chain"
         },
         "?":{
             token:'??',
-            def:"logic-nullish",
+            def:"symbol-logic-nullish",
             '?':{
                 token:'??=',
-                def:'logic-assign-nullish'
+                def:'symbol-logic-assign-nullish'
             }
-        },
+        }
     },
     ">": {
         token:'>',
-        def:"greater-than",
+        def:"symbol-greater-than",
         "=": {
             token:'>=',
-            def:"greater-than-equal"
+            def:"symbol-greater-than-equal"
         },
         ">": {
             token:'>>',
-            def:"bin-shift-right",
+            def:"symbol-bin-shift-right",
             '>':{
                 token:'>>>',
-                def:'bin-unsigned-shift-right'
+                def:'symbol-bin-unsigned-shift-right'
             }
         }
     },
     "<": {
         token:'<',
-        def:"less-than",
+        def:"symbol-less-than",
         "=": {
             token:'<=',
-            def:"less-than-equal"
+            def:"symbol-less-than-equal"
         },
         "<": {
             token:'<<',
-            def:"bin-shift-left",
+            def:"symbol-bin-shift-left",
             '<': {
                 token:'<<<',
-                def:'bin-unsigned-shift-left'
+                def:'symbol-bin-unsigned-shift-left'
             }
         }
     },
     "&": {
         token:'&',
-        def:"bit-and",
+        def:"symbol-bit-and",
         "=": {
             token:'&=',
-            def:"self-bit-and"
+            def:"symbol-self-bit-and"
         },
         "&":{
             token:'&&',
-            def:"logic-and",
+            def:"symbol-logic-and",
             '=': {
                 token: '&&=',
-                def:'logic-assign-true-only'
+                def:'symbol-logic-assign-true-only'
             }
         }
     },
     "|": {
         token:'|',
-        def:"unop-bit-or",
+        def:"symbol-unop-bit-or",
         "=": {
             token:'|=',
-            def:"assign-self-bit-or"
+            def:"symbol-assign-self-bit-or"
         },
         "|": {
             token:'||',
-            def:"logic-or",
+            def:"symbol-logic-or",
             '=':{
                 token:'||=',
-                def:'logic-assign-self-or'
+                def:'symbol-logic-assign-self-or'
             }
-        },
+        }
     },
     "^": {
         token:'^',
-        def:"bit-xor",
+        def:"symbol-bit-xor",
         "=": {
             token:'^=',
-            def:"bit-assign-self-xor"
-        },
+            def:"symbol-bit-assign-self-xor"
+        }
     },
 
-    //numbers - because WHY NOT
+    //nums - because WHY NOT
     "0": {
         token:'0',
-        def:"num-bin-oct-dec-hex"
+        def:"bin-oct-num-hex"
     },
     "1": {
         token:'1',
-        def:"num-bin-oct-dec-hex"
+        def:"bin-oct-num-hex"
     },
     "2": {
         token:'2',
-        def:"num-oct-dec-hex"
+        def:"oct-num-hex"
     },
     "3": {
         token:'3',
-        def:"num-oct-dec-hex"
+        def:"oct-num-hex"
     },
     "4": {
         token:'4',
-        def:"num-oct-dec-hex"
+        def:"oct-num-hex"
     },
     "5": {
         token:'5',
-        def:"num-oct-dec-hex"
+        def:"oct-num-hex"
     },
     "6": {
         token:'6',
-        def:"num-oct-dec-hex"
+        def:"oct-num-hex"
     },
     "7": {
         token:'7',
-        def:"num-oct-dec-hex"
+        def:"oct-num-hex"
     },
     "8": {
         token:'8',
-        def:"num-dec-hex"
+        def:"num-hex"
     },
     "9": {
         token:'9',
-        def:"num-dec-hex"
+        def:"num-hex"
     },
 
     //brute force matching: like tokens but for words
-    a:{
-        token:'a',
-        def:'letter-num-hex',
-        r:{
-            token:'ar',
-            def:'char',
-            r:{
-                token:'arr',
-                def:"type-assign-array"}}},
     b:{
         token:'b',
-        def:'letter-num-hex',
-        i:{
-            token:'bi',
-            def:'char',
-            n: {
-                token:'bin',
-                def:'type-assign-number-binary'}},
-        o:{
-            token:'bo',
-            def:'char',
-            o:{
-                token:'boo',
-                def:'char',
-                l:{
-                    token:'bool',
-                    def:"type-assign-boolean"}}},
+        def:'letter-hex',
         r:{
             token:'br',
             def:'char',
@@ -365,43 +378,51 @@
                     def:'char',
                     k:{
                         token:'break',
-                        def:"scope-loop-exit-break"}}}}},
+                        def:"res-scope-loop-exit-break"
+                    }
+                }
+            }
+        }
+    },
     c:{
         token:'c',
-        def:'letter-num-hex',
+        def:'letter-hex',
         o:{
             token:'co',
             def:'char',
             n:{
                 token:"con",
                 def:'char',
-                s:{
-                    token:'cons',
+                t:{
+                    token:'cont',
                     def:'char',
-                    t:{
-                        token:'const',
-                        def:"type-assign-constant"}}},
-            t:{
-                token:'cont',
-                def:'char',
-                i:{
-                    token:'conti',
-                    def:'char',
-                    n:{
-                        token:'contin',
+                    i:{
+                        token:'conti',
                         def:'char',
-                        u:{
-                            token:'continu',
+                        n:{
+                            token:'contin',
                             def:'char',
-                            e: {
-                                token:'continue',
-                                def:"scope-loop-continue"}}}}}}},
+                            u:{
+                                token:'continu',
+                                def:'char',
+                                e: {
+                                    token:'continue',
+                                    def:"res-scope-loop-continue"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     d:{
         token:'d',
-        def:'letter-num-hex'},
+        def:'letter-hex'
+    },
     e:{
         token:'e',
-        def:'letter-num-hex',
+        def:'letter-hex',
         l:{
             token:'el',
             def:'char',
@@ -410,7 +431,10 @@
                 def:'char',
                 e:{
                     token:'else',
-                    def:"scope-bool-conditional-else"}}},
+                    def:"res-statement-scope-bool-conditional-else"
+                }
+            }
+        },
         x:{
             token:'ex',
             def:'char',
@@ -425,31 +449,44 @@
                         def:'char',
                         t:{
                             token:'export',
-                            def:"type-module-export"}}}}}},
+                            def:"res-type-module-export"
+                        }
+                    }
+                }
+            }
+        }
+    },
     f:{
         token:'f',
-        def:'letter-num-hex',
-        n:{
-            token:'fn',
-            def:"type-assign-function"}},
-    h:{
-        token:'h',
-        def:'char',
-        e:{
-            token:'he',
+        def:'letter-hex',
+        a:{
+            token:'fa',
             def:'char',
-            x:{
-                token:'hex',
-                def:'type-assign-number-hex'}}},
+            l:{
+                token:'fal',
+                def:'char',
+                s:{
+                    token:'fals',
+                    def:'char',
+                    e:{
+                        token:'false',
+                        def:"res-value-bool-false"
+                    }
+                }
+            }
+        }
+    },
     i:{
         token:'i',
         def:'char',
         f:{
             token:'if',
-            def:"scope-bool-condition-if"},
+            def:"res-scope-bool-condition-if"
+        },
         n:{
             token:'in',
-            def:"scope-in"},
+            def:"res-scope-in"
+        },
         m:{
             token:'im',
             def:'char',
@@ -464,91 +501,61 @@
                         def:'char',
                         t:{
                             token:'import',
-                            def:"type-module-import"}}}}}},
-    n:{
-        token:'n',
+                            def:"res-type-module-import"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    o:{
+        token:'o',
         def:'char',
-        u:{
-            token:'nu',
+        f: {
+            token:'of',
+            def:"res-scope-of"
+        }
+    },
+    r:{
+        token:'r',
+        def:'char',
+        e:{
+            token:'re',
             def:'char',
-            m: {
-                token:'num',
-                def:"type-assign-number"}},
-        o:{
-            token:'o',
-            def:'char',
-            b:{
-                token:'ob',
+            t:{
+                token:'ret',
                 def:'char',
-                j: {
-                    token:'obj',
-                    def:"type-assign-object"}
-            },
-            c:{
-                token:'oc',
-                def:'char',
-                t: {
-                    token:'oct',
-                    def:'type-assign-number-octal'}
-            },
-            f: {
-                token:'of',
-                def:"scope-of"}},
-        r:{
-            token:'r',
-            def:'char',
-            e:{
-                token:'re',
-                def:'char',
-                t:{
-                    token:'ret',
+                u:{
+                    token:'retu',
                     def:'char',
-                    u:{
-                        token:'retu',
+                    r:{
+                        token:'retur',
                         def:'char',
-                        r:{
-                            token:'retur',
-                            def:'char',
-                            n:{
-                                token:'return',
-                                def:"scope-exit-return"}}}}}}},
-
-    s:{
-        '': {
-            token:'s',
-            def:'char'},
-        t:{
-            '': {
-                token:'st',
-                def:'char'},
-            r: {
-                token:'str',
-                def:"type-assign-string"}
-        },
-        u:{
-            token:'su',
+                        n:{
+                            token:'return',
+                            def:"res-scope-exit-return"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    t:{
+        token:'t',
+        def:'char',
+        r:{
+            token:'tr',
             def:'char',
-            p:{
-                token:'sup',
+            u:{
+                token:'tru',
                 def:'char',
                 e:{
-                    token:'supe',
-                    def:'char',
-                    r: {
-                        token:'super',
-                        def:"type-assign-superset"}}}}},
-    v:{
-        token:'v',
-        def:'char',
-        o:{
-            token:'vo',
-            def:'char',
-            i:{
-                token:'voi',
-                def:'char',
-                d: {
-                    token:'void',
-                    def:"type-assign-void"}}}},
+                    token:'true',
+                    def:"res-value-bool-true"
+                }
+            }
+        },
+    },
     w:{
         token:'w',
         def:'char',
@@ -563,5 +570,10 @@
                     def:'char',
                     e: {
                         token:'while',
-                        def:"scope-while"}}}}}
+                        def:"res-statement-scope-while"
+                    }
+                }
+            }
+        }
+    }
 };

@@ -17,7 +17,7 @@ statement ::
     'return' [ exp | statement.if ] |
     'throw' exp |
     'if' '(' exp ')' block [
-        { 'else' 'if' '(' exp ')' block } 'else' block
+        { 'else' statement.if } 'else' block
     ] |
     'while' '(' ( bool | num | value ) ')' block 
 

@@ -5,6 +5,7 @@ num
 
 const nonNegotiable {
     str name = 'Steve \'Harvey\'';
+    obj someObj {};
 };
 //nonNegotiable.name
 
@@ -34,6 +35,9 @@ str Names {
     parentSurname;
 };
 
+//typeof Names str{}
+//typeof Names.boyName str
+
 //this is considered cross-contamination
 //where the parent obj is a string based obj
 Names {
@@ -56,7 +60,8 @@ Names.age;
 type Person {
     num age = 18;
     bool isAdult() .age > 17;
-    str name, lastName, says, family;
+    str name, lastName;
+    Person extendedFamily {};
 };
 
 Person Employees {
@@ -70,6 +75,15 @@ Person Employees {
         .lastName = 'Studier';
     };
 };
+
+//Employees.Steve
+/* Person {
+    .age = 18;
+    .name = 'Steve';
+    .lastName = 'Harvey';
+    .extendedFamily = Person{};
+}*/
+
 
 Person Employees [
     {
@@ -101,3 +115,6 @@ str complex(num i){
     else if(!(i % 2)) 'is divisible by 2';
     else 'this number is divisible outside of 2 and 3';
 };
+
+for(const key in Person)
+    log(Person[key]);

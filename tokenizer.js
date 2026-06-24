@@ -544,28 +544,28 @@ module.exports = {
                         token:'const',
                         def:"res-type-assign-const"
                     }
-                }
-            },
-            t:{
-                token:'cont',
-                def:'char',
-                i:{
-                    token:'conti',
+                },
+                t:{
+                    token:'cont',
                     def:'char',
-                    n:{
-                        token:'contin',
+                    i:{
+                        token:'conti',
                         def:'char',
-                        u:{
-                            token:'continu',
+                        n:{
+                            token:'contin',
                             def:'char',
-                            e: {
-                                token:'continue',
-                                def:"res-scope-loop-continue"
+                            u:{
+                                token:'continu',
+                                def:'char',
+                                e: {
+                                    token:'continue',
+                                    def:"res-scope-loop-continue"
+                                }
                             }
                         }
                     }
                 }
-            }
+            }            
         }
     },
     C:{

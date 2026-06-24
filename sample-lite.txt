@@ -1,0 +1,51 @@
+age = 23 - 69;
+olderAge = age + 69;
+
+nonNegotiable {
+    name = 'Steve \'Harvey\'';
+    someObj {};
+};
+//nonNegotiable.name
+
+object {
+    yeet {
+        yeeted = 'I scream';
+    };
+};
+/*
+    Obj.yeet.yeeted
+    returns 'I scream'
+*/
+
+str scream = 'I have a mouth and I must scream';
+
+Names {
+    boyName;
+    girlName;
+    parentSurname;
+};
+
+Names {
+    age = 55;
+};
+
+scream(saySomething){
+    return saySomething ?? 'HELLO WORLD!';
+};
+
+listOfs [
+    44, 'yeety'
+];
+
+listOfNames [
+    'Steve', 'Stacy'
+];
+
+complex(i){
+    return if(!(i % 3)) 'is divisible by 3';
+    else if(!(i % 2)) 'is divisible by 2';
+    else 'this number is divisible outside of 2 and 3';
+};
+
+for(key in Person)
+    log(Person[key]);
