@@ -1,49 +1,72 @@
-function KeepOnly() {
-    this.result = {};
+function CleanProto(value){
+    if (typeof value === 'boolean'){
+        this.result = new Boolean(value);
+        this.result.__proto__ = null;
+        return this.result;
+    }
 
-    if (arguments[1].length === 0)
+    
+}
+
+function KeepOnly(that,mod){
+    this.result = {};
+    this.__proto__ = null;
+    that.__proto__ = null;
+    mod.__proto__ = null;
+    this.result.__proto__ = null;
+
+    if (mod.length === 0)
         return this.result;
     
-    if (arguments[1].length === 1)
-        return this.result[arguments[1][0]];
+    if (mod.length === 1)
+        return this.result[mod[0]] = that[mod[0]];
 
-    for (this.i in arguments[0])
-        for (this.j in arguments[1])
-            if (this.i === arguments[1][this.j])
-                this.result[this.i] = arguments[0][this.i];
+    for (this.i in Object.keys(that))
+        for (this.j in mod)
+            if (this.i === mod[this.j])
+                this.result[Object.keys(that)[this.i]] = that[Object.keys(that)[this.i]];
 
     return this.result;
 }
 
-function LexicalError() {
+function LexicalError(that){
+    this.__proto__ = null;
     this.name = 'LexicalError';
     this.message = 'Unexpected token';
-    this.obj = arguments[0];
+    this.obj = that;
+    for(this.key in this)
+        if(+this.key === NaN)
+            this[this.key].__proto__ = null;
 }
 
-function AssignmentError(){
-    this.obj = arguments[0];
+function AssignmentError(that,message){
+    this.__proto__ = null;
+    this.obj = that;
     this.message = 'Invalid assignment'+
         '[' + this.obj.ln + ':' + this.obj.pos + ']: ' +
-        arguments[1];
+        message;
     throw new Error(this.message);
 }
 
-function EOFError() {
+function EOFError(that){
+    this.__proto__ = null;
     this.message = 'Unexpected end of file';
     throw new Error(this.message);
 }
 
-function TokenMaker() {
-    this.token = arguments[1] || arguments[0].obj.token;
-    this.def = arguments[2] || arguments[0].obj.def;
-    this.ln = arguments[3] || arguments[0].ln;
-    this.pos = arguments[4] || arguments[0].pos;
+function TokenMaker(that, token, def, ln, pos){
+    this.__proto__ = null;
+    this.token = token || that.obj.token;
+    this.def = def || that.obj.def;
+    this.ln = ln || that.ln;
+    this.pos = pos || that.pos;
+    for(this.key in this)
+        this[this.key].__proto__ = null;
 }
 
-function CharLexer() {
+function CharLexer(that){
     //static start
-    this.src = arguments[0].split('') || "";
+    this.src = that.split('') || "";
     this.tokenizer = require('./tokenizer.js');
     this.types = this.tokenizer.types;
     this.end = this.src.length;
@@ -56,7 +79,7 @@ function CharLexer() {
     this.buffer = [];
     this.typeNest = [];
     this.scope = [];
-    this.heap = {
+    this.global = {
         //primitive types
         'bool':{},
         'bin':{},
@@ -64,6 +87,7 @@ function CharLexer() {
         'num':{},
         'hex':{},
         'str':{},
+        'void':{},
         
         //vehicular types
         'arr':{},
@@ -75,6 +99,14 @@ function CharLexer() {
         'module':{},
         'type':{},
     };
+
+    /*
+    for (this.type in this.global)
+        if(this.global[this.type][identifier])
+            return this.global[this.type][identifier];
+
+    return new Error('Undefined identifier "' + identifier + '"');
+    */
     
     //position markers
     this.i = -1;
@@ -182,18 +214,31 @@ function CharLexer() {
         }
 
         //number crunching tokens
-        if(this.prevToken.def.indexOf('hex')+1 && this.currToken.def.indexOf('hex')+1) {
+        /*if(this.prevToken.def.indexOf('hex')+1 && this.currToken.def.indexOf('hex')+1) {
             this.buffer[this.buffer.length - 2].token += this.currToken.token;
             this.buffer.length -= 1;
             if(this.nextChar) continue;
             else throw new EOFError();
-        }
+        }*/
 
         // DO NOT EDIT ANYTHING ABOVE!!! ---------------------------------------------
         // NOW WE CHECK TOKENS BELOW -------------------------------------------------
 
         //handling types based on identifier context
         if (this.prevToken.def.indexOf('type')+1) {
+
+            //handle identifier missing errors
+            if(
+                this.currToken.token === '=' ||
+                this.currToken.token === '(' ||
+                this.currToken.token === '{' ||
+                this.currToken.token === '['
+            ) throw new AssignmentError(
+                this,
+                'Expected identifier after type declaration, got "' +
+                this.currToken.token +
+                '"'
+            );
 
             //handle assignment errors based on reserved keywords, symbols, and numbers
             if((
@@ -204,10 +249,7 @@ function CharLexer() {
                 this.nextChar === '=' ||
                 this.nextChar === '(' ||
                 this.nextChar === '{' ||
-                this.nextChar === '[' ||
-                this.nextChar === ' ' ||
-                this.nextChar === '\n' ||
-                this.nextChar === '\r\n'
+                this.nextChar === '[' 
             )) throw new AssignmentError(
                 this,
                 'Reserved keyword, Symbol, or Number token "' +
@@ -247,11 +289,19 @@ function CharLexer() {
                 else throw new EOFError();
             }
 
-            //operations characters based on identifier
+            //assignments
             if(
-                this.currToken.def.indexOf('open')+1 ||
-                this.currToken.token === '=' 
+                this.currToken.def.indexOf('assign')+1 &&
+                this.currToken.token === '='
             ){
+                this.buffer[this.buffer.length - 1].def += '-assign';
+                if(this.nextChar) continue;
+                else throw new EOFError();
+            }
+
+            //operations characters based on identifier 
+            //open for function calls/definitions, object definitions/calls, array definitions/calls, and assignments
+            if(this.currToken.def.indexOf('open')+1){
 
                 //identifier context
                 //function definition/call
@@ -274,13 +324,6 @@ function CharLexer() {
                 if(this.currToken.def.indexOf('square')+1){
                     this.buffer[this.buffer.length - 1].def += '-arr';
                     this.scope[this.scope.length] = this.currToken.def;
-                    if(this.nextChar) continue;
-                    else throw new EOFError();
-                }
-                
-                //assignments
-                if(this.currToken.def.indexOf('assign')+1){
-                    this.buffer[this.buffer.length - 1].def += '-assign';
                     if(this.nextChar) continue;
                     else throw new EOFError();
                 }

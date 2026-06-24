@@ -79,18 +79,15 @@ TypePrimitive :: oneOf
     'arr'
     'obj'
     'fn'
-    'super'
+    'type'
     'const'
     identifier?super
 
 TypeofTypes ::
-    'Arr' | 'Obj' | 'Fn' | 'Void' |
-    'Str' | 'Str[]' | 'Str{}' |
-    'Num' | 'Num[]' | 'Num{}' |
-    'Bin' | 'Bin[]' | 'Bin{}' |
-    'Oct' | 'Oct[]' | 'Oct{}' |
-    'Hex' | 'Hex[]' | 'Hex{}' |
-
+    'Fn' | 'Void' | (
+        'Const' | 'Arr' | 'Obj' | 'Str' |
+        'Num' | 'Bin' | 'Oct' | 'Hex' |
+    ) [ '()' | '[]' | '{}' ] 
 
 types::
     TypePrimitive | child | modules | TypeofTypes
@@ -120,7 +117,7 @@ assign ::
     )
 
 parameters ::
-    { TypePrimitive identifier ',' } TypePrimitive identifier
+    { TypeofTypes identifier ',' } TypeofTypes identifier
 
 unOp :: '+' | '-' | '!' | '++' | '--' 
 

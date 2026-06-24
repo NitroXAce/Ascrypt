@@ -1,4 +1,7 @@
-num age = 23 - 69;
+num 
+    age = 23 - 69,
+    olderAge = age + 69    
+;
 
 const nonNegotiable {
     str name = 'Steve \'Harvey\'';
@@ -47,6 +50,9 @@ Names {
     num age = 55;
 };
 
+Names.age;
+//returns 55
+
 type Person {
     num age = 18;
     bool isAdult() .age > 17;
@@ -78,7 +84,7 @@ Person Employees [
     }
 ];
 
-str scream(str saySomething){
+str scream(Str saySomething){
     return saySomething ?? 'HELLO WORLD!';
 };
 

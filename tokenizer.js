@@ -81,6 +81,10 @@ module.exports = {
             pos:1
         }
     },
+    '\t':{
+        token:'\t',
+        def:'symbol-whitespace-tab'
+    },
 
     //escape character and its derivatives
     '\\':{
@@ -383,7 +387,9 @@ module.exports = {
             r:{
                 token:'arr',
                 def:"res-type-assign-arr"
-            }}},
+            }
+        }
+    },
     A:{
         token:'A',
         def:'char',
@@ -392,8 +398,31 @@ module.exports = {
             def:'char',
             r:{
                 token:'Arr',
-                def:"res-typeof-Arr-Array"
-            }}},
+                def:"res-typeof-Arr-Array",
+                '{':{
+                    error:'SyntaxError: Malformed token, expected \'}\' after "Arr"',
+                    '}':{
+                        token:'Arr{}',
+                        def:'res-typeof-Arr-Array-Collection'
+                    }
+                },
+                '[':{
+                    error:'SyntaxError: Malformed token, expected \']\' after "Arr"',
+                    ']':{
+                        token:'Arr[]',
+                        def:'res-typeof-Arr-Array-List'
+                    }
+                },
+                '(':{
+                    error:'SyntaxError: Malformed token, expected \')\' after "Arr"',
+                    ')':{
+                        token:'Arr()',
+                        def:'res-typeof-Arr-Array-Call'
+                    }
+                }
+            }
+        }
+    },
     b:{
         token:'b',
         def:'letter-hex',
@@ -403,7 +432,8 @@ module.exports = {
             n: {
                 token:'bin',
                 def:'res-type-assign-num-bin'
-            }},
+            }
+        },
         o:{
             token:'bo',
             def:'char',
@@ -413,7 +443,9 @@ module.exports = {
                 l:{
                     token:'bool',
                     def:"res-type-assign-bool"
-                }}},
+                }
+            }
+        },
         r:{
             token:'br',
             def:'char',
@@ -426,7 +458,11 @@ module.exports = {
                     k:{
                         token:'break',
                         def:"res-scope-loop-exit-break"
-                    }}}}},
+                    }
+                }
+            }
+        }
+    },
     B:{
         token:'B',
         def:'char',
@@ -448,6 +484,13 @@ module.exports = {
                     ']':{
                         token:'Bin[]',
                         def:'res-typeof-Bin-Binary-List'
+                    }
+                },
+                '(':{
+                    error:'SyntaxError: Malformed token, expected \')\' after "Bin"',
+                    ')':{
+                        token:'Bin()',
+                        def:'res-typeof-Bin-Binary-Call'
                     }
                 }
             }},
@@ -473,8 +516,18 @@ module.exports = {
                             token:'Bool[]',
                             def:'res-typeof-Bool-Boolean-List'
                         }
+                    },
+                    '(':{
+                        error:'SyntaxError: Malformed token, expected \')\' after "Bool"',
+                        ')':{
+                            token:'Bool()',
+                            def:'res-typeof-Bool-Boolean-Call'
+                        }
                     }
-                }}}},
+                }
+            }
+        }
+    },
     c:{
         token:'c',
         def:'letter-hex',
@@ -490,7 +543,9 @@ module.exports = {
                     t:{
                         token:'const',
                         def:"res-type-assign-const"
-                    }}},
+                    }
+                }
+            },
             t:{
                 token:'cont',
                 def:'char',
@@ -506,7 +561,54 @@ module.exports = {
                             e: {
                                 token:'continue',
                                 def:"res-scope-loop-continue"
-                            }}}}}}},
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    C:{
+        token:'C',
+        def:'char',
+        o:{
+            token:'Co',
+            def:'char',
+            n:{
+                token:"Con",
+                def:'char',
+                s:{
+                    token:'Cons',
+                    def:'char',
+                    t:{
+                        token:'Const',
+                        def:"res-typeof-Const-Constant",
+                        '{':{
+                            error:'SyntaxError: Malformed token, expected \'}\' after "Const"',
+                            '}':{
+                                token:'Const{}',
+                                def:'res-typeof-Const-Constant-Collection'
+                            }
+                        },
+                        '[':{
+                            error:'SyntaxError: Malformed token, expected \']\' after "Const"',
+                            ']':{
+                                token:'Const[]',
+                                def:'res-typeof-Const-Constant-List'
+                            }
+                        },
+                        '(':{
+                            error:'SyntaxError: Malformed token, expected \')\' after "Const"',
+                            ')':{
+                                token:'Const()',
+                                def:'res-typeof-Const-Constant-Call'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     d:{
         token:'d',
         def:'letter-hex'
@@ -523,7 +625,9 @@ module.exports = {
                 e:{
                     token:'else',
                     def:"res-statement-scope-bool-conditional-else"
-                }}},
+                }
+            }
+        },
         x:{
             token:'ex',
             def:'char',
@@ -539,7 +643,12 @@ module.exports = {
                         t:{
                             token:'export',
                             def:"res-type-module-export"
-                        }}}}}},
+                        }
+                    }
+                }
+            }
+        }
+    },
     f:{
         token:'f',
         def:'letter-hex',
@@ -562,14 +671,16 @@ module.exports = {
         n:{
             token:'fn',
             def:"res-type-assign-fn"
-        }},
+        }
+    },
     F:{
         token:'F',
         def:'char',
         n:{
             token:'Fn',
             def:"res-typeof-Fn-Function"
-        }},
+        }
+    },
     h:{
         token:'h',
         def:'char',
@@ -579,7 +690,9 @@ module.exports = {
             x:{
                 token:'hex',
                 def:'res-type-assign-num-hex'
-            }}},
+            }
+        }
+    },
     i:{
         token:'i',
         def:'char',
@@ -606,7 +719,12 @@ module.exports = {
                         t:{
                             token:'import',
                             def:"res-type-module-import"
-                        }}}}}},
+                        }
+                    }
+                }
+            }
+        }
+    },
     n:{
         token:'n',
         def:'char',
@@ -616,7 +734,9 @@ module.exports = {
             m: {
                 token:'num',
                 def:"res-type-assign-num"
-            }}},
+            }
+        }
+    },
     o:{
         token:'o',
         def:'char',
@@ -639,7 +759,8 @@ module.exports = {
         f: {
             token:'of',
             def:"res-scope-of"
-        }},
+        }
+    },
     O:{
         token:'O',
         def:'char',
@@ -662,15 +783,46 @@ module.exports = {
                         token:'Oct[]',
                         def:'res-typeof-Oct-Octal-List'
                     }
+                },
+                '(':{
+                    error:'SyntaxError: Malformed token, expected \')\' after "Oct"',
+                    ')':{
+                        token:'Oct()',
+                        def:'res-typeof-Oct-Octal-Call'
+                    }
                 }
-            }},
+            }
+        },
         b:{
             token:'Ob',
             def:'char',
             j:{
                 token:'Obj',
-                def:"res-typeof-Obj-Object"
-            }}},
+                def:"res-typeof-Obj-Object",
+                '{':{
+                    error:'SyntaxError: Malformed token, expected \'}\' after "Obj"',
+                    '}':{
+                        token:'Obj{}',
+                        def:'res-typeof-Obj-Object-Collection'
+                    }
+                },
+                '[':{
+                    error:'SyntaxError: Malformed token, expected \']\' after "Obj"',
+                    ']':{
+                        token:'Obj[]',
+                        def:'res-typeof-Obj-Object-List'
+                    }
+                },
+                '(':{
+                    error:'SyntaxError: Malformed token, expected \')\' after "Obj"',
+                    ')':{
+                        token:'Obj()',
+                        def:'res-typeof-Obj-Object-Call'
+                    }
+                }
+            }
+        }
+    },
     r:{
         token:'r',
         def:'char',
@@ -689,7 +841,12 @@ module.exports = {
                         n:{
                             token:'return',
                             def:"res-scope-exit-return"
-                        }}}}}},
+                        }
+                    }
+                }
+            }
+        }
+    },
     s:{
         token:'s',
         def:'char',
@@ -699,7 +856,9 @@ module.exports = {
             r: {
                 token:'str',
                 def:"res-type-assign-str"
-            }}},
+            }
+        }
+    },
     S:{
         token:'S',
         def:'char',
@@ -722,6 +881,13 @@ module.exports = {
                         token:'Str[]',
                         def:'res-typeof-Str-String-List'
                     }
+                },
+                '(':{
+                    error:'SyntaxError: Malformed token, expected \')\' after "Str"',
+                    ')':{
+                        token:'Str()',
+                        def:'res-typeof-Str-String-Call'
+                    }
                 }
             }
         }
@@ -738,7 +904,9 @@ module.exports = {
                 e:{
                     token:'true',
                     def:"res-value-bool-true"
-                }}},
+                }
+            }
+        },
         y:{
             token:'ty',
             def:'char',
@@ -764,7 +932,10 @@ module.exports = {
                 d: {
                     token:'void',
                     def:"res-type-assign-void"
-                }}}},
+                }
+            }
+        }
+    },
     w:{
         token:'w',
         def:'char',
@@ -780,5 +951,9 @@ module.exports = {
                     e: {
                         token:'while',
                         def:"res-statement-scope-while"
-                    }}}}}
+                    }
+                }
+            }
+        }
+    }
 };
