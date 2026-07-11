@@ -1,31 +1,46 @@
-function KeepOnly(obj,keep) {
+function CleanProto(value){
+    if (typeof value === 'boolean'){
+        this.result = new Boolean(value);
+        this.result.__proto__ = null;
+        return this.result;
+    }
+
+    
+}
+
+function KeepOnly(that,mod){
     this.result = {};
 
-    if (keep.length === 0)
+    if (mod.length === 0)
         return this.result;
     
-    if (keep.length === 1)
-        return this.result[keep[0]];
+    if (mod.length === 1)
+        return this.result[mod[0]] = that[mod[0]];
 
-    for (this.i in obj)
-        for (this.j in keep)
-            if (this.i === keep[this.j])
-                this.result[this.i] = obj[this.i];
+    for (this.i in Object.keys(that))
+        for (this.j in mod)
+            if (this.i === mod[this.j])
+                this.result[Object.keys(that)[this.i]] = that[Object.keys(that)[this.i]];
 
     return this.result;
 }
 
-function LexicalError(obj) {
+function LexicalError(that){
+    this.__proto__ = null;
     this.name = 'LexicalError';
     this.message = 'Unexpected token';
-    this.obj = obj;
+    this.obj = that;
+    for(this.key in this)
+        if(+this.key === NaN)
+            this[this.key].__proto__ = null;
 }
 
-function AssignmentError(obj, message){
-    this.obj = obj;
+function AssignmentError(that,message){
+    this.__proto__ = null;
+    this.obj = that;
     this.message = 'Invalid assignment'+
         '[' + this.obj.ln + ':' + this.obj.pos + ']: ' +
-        message;
+        arguments[1];
     throw new Error(this.message);
 }
 
@@ -34,16 +49,19 @@ function EOFError() {
     throw new Error(this.message);
 }
 
-function TokenMaker(that, token, def, ln, pos) {
+function TokenMaker(that, token, def, ln, pos){
+    this.__proto__ = null;
     this.token = token || that.obj.token;
     this.def = def || that.obj.def;
     this.ln = ln || that.ln;
     this.pos = pos || that.pos;
+    for(this.key in this)
+        this[this.key].__proto__ = null;
 }
 
-function CharLexer(src) {
+function CharLexer(that){
     //static start
-    this.src = src || "";
+    this.src = that.split('') || "";
     this.tokenizer = require('./tokenizer.js');
     this.types = this.tokenizer.types;
     this.end = this.src.length;
@@ -56,7 +74,7 @@ function CharLexer(src) {
     this.buffer = [];
     this.typeNest = [];
     this.scope = [];
-    /*this.heap = {
+    this.global = {
         //primitive types
         'bool':{},
         'bin':{},
@@ -74,7 +92,15 @@ function CharLexer(src) {
         //very complex types
         'module':{},
         'type':{},
-    };*/
+    };
+
+    /*
+    for (this.type in this.global)
+        if(this.global[this.type][identifier])
+            return this.global[this.type][identifier];
+
+    return new Error('Undefined identifier "' + identifier + '"');
+    */
     
     //position markers
     this.i = -1;
@@ -128,17 +154,6 @@ function CharLexer(src) {
 
         //if no screening of tokens, continue til I do
         if (!this.prevToken) continue;
-
-        //number crunching tokens
-        if(
-            this.prevToken.def.indexOf('hex')+1  &&
-            this.currToken.def.indexOf('hex')+1
-        ) {
-            this.buffer[this.buffer.length - 2].token += this.currToken.token;
-            this.buffer.length -= 1;
-            if(this.nextChar) continue;
-            else throw new EOFError();
-        }
 
         //complete handling
         if(!(this.prevToken.def.indexOf('complete')+1)){
