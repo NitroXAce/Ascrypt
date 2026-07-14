@@ -98,47 +98,47 @@ function CharLexer(src){
         this.curr = this.buffer[this.buffer.length-1];
         this.prev = this.buffer[this.buffer.length-2];
 
+        // Force comment mode persistence
+        if (this.prev && this.prev.def.comment && !this.prev.def.complete) {
+            // Keep previous token in comment mode
+            this.prev.def.open = true;   // helps the next iteration detect it
+        }
+        
+
         // Skip if theres no previous token to compare to
         if (!this.prev) continue;
 
-        //complete handling
-        if(!(this.prev.def.complete)){
-            //comment handling, if line comment, til newline, if block comment, til close
-            if(this.prev.def.comment){
-                //continual comment handling, if line comment, til newline, if block comment, til close
-                if((
-                    //line comment til newline
-                    this.curr.def.newline &&
-                    this.prev.def.unop
-                ) || (
-                    //block comment til
-                    this.curr.def.close &&
-                    this.curr.def.comment &&
-                    this.prev.def.open
-                )) this.buffer[this.buffer.length - 2].def.complete=true;
-                
-                //if still in comment, condense token and continue
+        // ==================== COMPLETE HANDLING (Comments + Strings) ====================
+        if (!this.prev.def.complete) {
+
+            // COMMENT HANDLING
+            if (this.prev.def.comment) {
+
+                // Mark as complete when we hit the closer
+                if (this.curr.def.close && this.curr.def.comment && this.prev.def.open) {
+                    this.buffer[this.buffer.length - 2].def.complete = true;
+                }
+
+                // Always append to the comment token (this is the key part that was missing)
                 this.buffer[this.buffer.length - 2].token += this.curr.token;
                 this.buffer.length -= 1;
 
-                if(this.prev.def.complete)
+                // Clean up the closing token if comment is now complete
+                if (this.buffer[this.buffer.length - 1]?.def?.complete) {
                     this.buffer.length -= 1;
-                
+                }
+
                 continue;
             }
 
-            //string handling
-            if(this.prev.def.quote){
-                //if the previous token either appended or singular
-                //and oour current token matches
-                //then we can mark the string as complete
-                if(this.prev.def === this.curr.def)
-                    this.buffer[this.buffer.length - 2].def.complete=true;
+            // STRING HANDLING
+            if (this.prev.def.quote) {
+                if (this.prev.def === this.curr.def) {           // closing quote
+                    this.buffer[this.buffer.length - 2].def.complete = true;
+                }
 
-                //if still in string, condense token and continue
                 this.buffer[this.buffer.length - 2].token += this.curr.token;
                 this.buffer.length -= 1;
-                
                 continue;
             }
         }
