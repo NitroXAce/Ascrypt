@@ -314,7 +314,7 @@ function CharLexer(that){
     }
 
 
-    return new KeepOnly(this,['buffer','heap']);
+    return this.buffer;
 }
 module.exports = {
     CharLexer:CharLexer,
