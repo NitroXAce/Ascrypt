@@ -154,43 +154,13 @@ function CharLexer(src){
 
         //handling types based on identifier context
         if (this.prev.def.type) {
-
-            //Reserve is not identifier, throw error if reserved keyword is used as identifier
-            if(this.curr.def.res)
-                throw new AssignmentError(
-                    this,
-                    'Reserved keyword token "' +
-                    this.curr.token +
-                    '" cannot be used as an identifier'
-                );
-
-            //Symbol is not identifier, throw error if symbol is used as identifier
-            if(this.curr.def.symbol)
-                throw new AssignmentError(
-                    this,
-                    'Symbol token "' +
-                    this.curr.token +
-                    '" cannot be used as an identifier'
-                );
-
-            //Number is not identifier, throw error if number is used as identifier
-            if(
-                !this.curr.def.letter
-                && !this.curr.def.char
-                && this.curr.def.hex
-                || this.curr.def.bin
-                || this.curr.def.oct
-                || this.curr.def.dec
-            )
-                throw new AssignmentError(
-                    this,
-                    'Number token "' +
-                    this.curr.token +
-                    '" cannot be used as an identifier'
-                );
-
             
-            if(
+            if((
+                this.curr.def.res ||
+                this.curr.def.symbol ||
+                (this.curr.def.bin || this.curr.def.oct || this.curr.def.dec) ||
+                (this.curr.def.hex && !this.curr.def.char)
+            ) && (
                 this.nextChar === '=' ||
                 this.nextChar === '(' ||
                 this.nextChar === '{' ||
@@ -198,7 +168,7 @@ function CharLexer(src){
                 this.nextChar === ' ' ||
                 this.nextChar === '\n' ||
                 this.nextChar === '\r\n'
-            ) throw new AssignmentError(
+            )) throw new AssignmentError(
                 this,
                 'Reserved keyword, Symbol, or Number token "' +
                 this.curr.token +
@@ -240,7 +210,7 @@ function CharLexer(src){
             }
 
             //operations characters based on identifier
-            /*if(
+            if(
                 this.curr.def.open ||
                 this.curr.token === '=' 
             ){
@@ -273,7 +243,7 @@ function CharLexer(src){
                     continue;
                 }
                 
-            }*/
+            }
         }
     }
 

@@ -733,13 +733,13 @@ module.exports = {
     a: {
         token: 'a',
         def: {
-            letter: true,
+            char: true,
             hex: true
         },
         r: {
             token: 'ar',
             def: {
-                letter: true
+                char: true
             },
             r: {
                 token: 'arr',
@@ -815,7 +815,7 @@ module.exports = {
     b: {
         token: 'b',
         def: {
-            letter: true,
+            char: true,
             hex: true
         },
         i: {
@@ -1007,7 +1007,7 @@ module.exports = {
     c: {
         token: 'c',
         def: {
-            letter: true,
+            char: true,
             hex: true
         },
         o: {
@@ -1142,14 +1142,14 @@ module.exports = {
     d: {
         token: 'd',
         def: {
-            letter: true,
+            char: true,
             hex: true
         }
     },
     e: {
         token: 'e',
         def: {
-            letter: true,
+            char: true,
             hex: true
         },
         l: {
@@ -1212,7 +1212,7 @@ module.exports = {
     f: {
         token: 'f',
         def: {
-            letter: true,
+            char: true,
             hex: true
         },
         a: {
