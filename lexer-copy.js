@@ -1,52 +1,17 @@
 function TokenMaker(that, token, def, ln, pos){
-    this.__proto__ = null;
     this.token = token || that.obj.token || '';
     this.def = def || that.obj.def || {char:true};
     this.ln = ln || that.ln;
     this.pos = pos || that.pos;
 }
 
-function CleanProto(value){
-    this.__proto__ = null;
-    if (typeof value === 'boolean'){
-        this.result = new Boolean(value);
-        this.result.__proto__ = null;
-        return this.result;
-    }
-
-    
-}
-
-function KeepOnly(that,mod){
-    this.__proto__ = null;
-    this.result = {};
-
-    if (mod.length === 0)
-        return this.result;
-    
-    if (mod.length === 1)
-        return this.result[mod[0]] = that[mod[0]];
-
-    for (this.i in Object.keys(that))
-        for (this.j in mod)
-            if (this.i === mod[this.j])
-                this.result[Object.keys(that)[this.i]] = that[Object.keys(that)[this.i]];
-
-    return this.result;
-}
-
 function LexicalError(that){
-    this.__proto__ = null;
     this.name = 'LexicalError';
     this.message = 'Unexpected token';
     this.obj = that;
-    for(this.key in this)
-        if(+this.key === NaN)
-            this[this.key].__proto__ = null;
 }
 
 function AssignmentError(that,message){
-    this.__proto__ = null;
     this.obj = that;
     this.message = 'Invalid assignment'+
         '[' + this.obj.ln + ':' + this.obj.pos + ']: ' +
@@ -55,25 +20,12 @@ function AssignmentError(that,message){
 }
 
 function EOFError() {
-    this.__proto__ = null;
     this.message = 'Unexpected end of file';
     throw new Error(this.message);
 }
 
-function PureObjStrip(obj, omit){
-    this.__proto__ = null;
-    this.result = {};
-    this.result = JSON.parse(JSON.stringify(obj), function(key, value){
-        if(typeof key === 'object' && key !== omit)
-            key.__proto__ = null;
-    });
-    return this.result;
-}
-
 function CharLexer(src){
-    this.__proto__ = null;
     this.src = (src || "").split('');
-    this.src.__proto__ = null;
     this.tokenizer = require('./tokenizer-copy.js')
     this.types = this.tokenizer.types;
     this.end = this.src.length;
@@ -107,7 +59,6 @@ function CharLexer(src){
                 this.obj.def.newline ? (this.pos = 1, this.pos) : this.pos - (this.obj.token || this.char).length + 1
             ));
         } else this.buffer.push(new TokenMaker(this, this.char, {
-            __proto__: null,
             char:true
         }));
 
@@ -204,7 +155,6 @@ function CharLexer(src){
                         this.curr.token,
                         //'identifier-' + this.types[this.type]
                         new (function ReturnObj(type){
-                            this.__proto__ = null;
                             this.identifier = true;
                             this[type] = true;
                         })(this.types[this.type])

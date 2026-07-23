@@ -10,5 +10,6 @@ var
 //new CharLexer(inputStr);
 
 console.log(new CharLexerCopy(inputStr));
+//new CharLexerCopy(inputStr);
 
 console.log(process.memoryUsage().heapUsed);

@@ -1,4 +1,4 @@
-module.exports = { __proto__: null,
+module.exports = { 
     types:[
         'bool',
         'bin',
@@ -15,30 +15,30 @@ module.exports = { __proto__: null,
     ],
 
     //default "chars"
-    /*'': { __proto__: null,
+    /*'': { 
         token:'',
         def:'char'
     },*/
-    /*"\\": { __proto__: null,
-        '': { __proto__: null,
+    /*"\\": { 
+        '': { 
             token: '\\',
             def: 'str-regex-escape-char'
         },
-        'x': fn (primaryHex, secondaryHex) { __proto__: null,
+        'x': fn (primaryHex, secondaryHex) { 
             this.hexList = '0123456789abcdef';
             this.boolSet = [0, 0];
             for (this.hex in this.hexList)
                 for (this.a in arguments)
                     if (this.a < this.boolSet.length && arguments[this.a] == this.hex)
                         this.boolSet[this.a] = 1;
-            if (!!this.boolSet[0] && !!this.boolSet[1]) return { __proto__: null,
+            if (!!this.boolSet[0] && !!this.boolSet[1]) return { 
                 token: '\\x' + primaryHex + secondaryHex,
                 def: 'char-hex'
-            }; else return { __proto__: null,
+            }; else return { 
                 error: 'TokenError: this current token does not match its parameters, try again!'
             };
         },
-        'u': fn (hexA, hexB, hexC, hexD) { __proto__: null,
+        'u': fn (hexA, hexB, hexC, hexD) { 
             this.hexList = '0123456789abcdef';
             this.boolSet = [0, 0, 0, 0];
             for (this.hex in this.hexList)
@@ -50,49 +50,49 @@ module.exports = { __proto__: null,
                 !!this.boolSet[1] &&
                 !!this.boolSet[2] &&
                 !!this.boolSet[3]
-            ) return { __proto__: null,
+            ) return { 
                 token: '\\u' + hexA + hexB + hexC + hexD,
                 def: 'char-unicode'
-            }; else return { __proto__: null,
+            }; else return { 
                 error: 'TokenError: this current token does not match its parameters, try again!'
             };
         },
     },*/
 
     //whitespace PLEASE FORGIVE ME!!!
-    '':{ __proto__: null,
+    '':{ 
         token:'',
         def:'please-god-why'
     },
-    ' ':{ __proto__: null,
+    ' ':{ 
         token:' ',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             whitespace:true,
             space:true,
             char:true
         }
     },
-    '\n':{ __proto__: null,
+    '\n':{ 
         token:'\n',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             whitespace:true,
             newline:true,
             char:true
         }
     },
-    '\r':{ __proto__: null,
+    '\r':{ 
         token:'\r',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             whitespace:true,
             carriage:true,
             char:true
         },
-        '\n':{ __proto__: null,
+        '\n':{ 
             token:'\r\n',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 whitespace:true,
                 carriage:true,
@@ -102,9 +102,9 @@ module.exports = { __proto__: null,
             pos:true
         }
     },
-    '\t':{ __proto__: null,
+    '\t':{ 
         token:'\t',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             whitespace:true,
             tab:true,
@@ -113,15 +113,15 @@ module.exports = { __proto__: null,
     },
 
     //escape character and its derivatives
-    '\\':{ __proto__: null,
+    '\\':{ 
         token:'\\',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             escape:true
         },
-        '\'':{ __proto__: null,
+        '\'':{ 
             token:"\\'",
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 escape:true,
                 str:true,
@@ -129,9 +129,9 @@ module.exports = { __proto__: null,
                 quote:true
             }
         },
-        '"':{ __proto__: null,
+        '"':{ 
             token:'\\"',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 escape:true,
                 str:true,
@@ -142,73 +142,73 @@ module.exports = { __proto__: null,
     },
 
     //enclosure operators
-    "(": { __proto__: null,
+    "(": { 
         token:'(',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             open:true,
             paren:true
         }
     },
-    ")": { __proto__: null,
+    ")": { 
         token:')',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             close:true,
             paren:true
         }
     },
-    "[": { __proto__: null,
+    "[": { 
         token:'[',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             open:true,
             square:true
         }
     },
-    "]": { __proto__: null,
+    "]": { 
         token:']',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             close:true,
             square:true
         }
     },
-    "{ __proto__: null,": { __proto__: null,
-        token:'{ __proto__: null,',
-        def:{ __proto__: null,
+    "{ ": { 
+        token:'{ ',
+        def:{ 
             symbol:true,
             open:true,
             curly:true
         }
     },
-    "}": { __proto__: null,
+    "}": { 
         token:'}',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             close:true,
             curly:true
         }
     },
-    ";": { __proto__: null,
+    ";": { 
         token:';',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             semicolon:true
         }
     },
-    ":": { __proto__: null,
+    ":": { 
         token:':',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             logic:true,
             colon:true,
             false:true
         }
     },
-    '"': { __proto__: null,
+    '"': { 
         token:'"',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             str:true,
             comp:true,
@@ -216,9 +216,9 @@ module.exports = { __proto__: null,
             quote:true
         }
     },
-    "'":{ __proto__: null,
+    "'":{ 
         token:"'",
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             str:true,
             prim:true,
@@ -226,16 +226,16 @@ module.exports = { __proto__: null,
             quote:true
         }
     },
-    ",": { __proto__: null,
+    ",": { 
         token:',',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             comma:true
         }
     },
-    ".": { __proto__: null,
+    ".": { 
         token:'.',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             identifier:true,
             assign:true,
@@ -243,16 +243,16 @@ module.exports = { __proto__: null,
             child:true,
             dot:true
         },
-        ".": { __proto__: null,
+        ".": { 
             token:"..",
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 num:true,
                 range:true
             },
-            ".": { __proto__: null,
+            ".": { 
                 token:'...',
-                def:{ __proto__: null,
+                def:{ 
                     symbol:true,
                     assign:true,
                     spread:true,
@@ -268,25 +268,25 @@ module.exports = { __proto__: null,
     },
     
     //arithmetic operators prefix
-    "+": { __proto__: null,
+    "+": { 
         token:'+',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             math:true,
             add:true
         },
-        "=": { __proto__: null,
+        "=": { 
             token:'+=',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 math:true,
                 self:true,
                 add:true
             }
         },
-        "+": { __proto__: null,
+        "+": { 
             token:'++',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 unop:true,
                 cycle:true,
@@ -294,25 +294,25 @@ module.exports = { __proto__: null,
             }
         }
     },
-    "-": { __proto__: null,
+    "-": { 
         token:'-',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             math:true,
             subtract:true
         },
-        "=": { __proto__: null,
+        "=": { 
             token:'-=',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 math:true,
                 self:true,
                 subtract:true
             }
         },
-        "-": { __proto__: null,
+        "-": { 
             token:'--',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 unop:true,
                 cycle:true,
@@ -320,83 +320,83 @@ module.exports = { __proto__: null,
             }
         }
     },
-    "*": { __proto__: null,
+    "*": { 
         token:'*',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             math:true,
             multiply:true
         },
-        "=": { __proto__: null,
+        "=": { 
             token:'*=',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 math:true,
                 self:true,
                 multiply:true
             }
         },
-        "*": { __proto__: null,
+        "*": { 
             token:'**',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 math:true,
                 power:true
             }
         },
-        "/": { __proto__: null,
+        "/": { 
             token:'*/',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 close:true,
                 comment:true
             }
         }
     },
-    "/": { __proto__: null,
+    "/": { 
         token:'/',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             math:true,
             divide:true
         },
-        "=": { __proto__: null,
+        "=": { 
             token:'/=',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 math:true,
                 self:true,
                 divide:true
             }
         },
-        "/": { __proto__: null,
+        "/": { 
             token:'//',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 unop:true,
                 line:true,
                 comment:true
             }
         },
-        "*": { __proto__: null,
+        "*": { 
             token:'/*',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 open:true,
                 comment:true
             }
         }
     },
-    "%": { __proto__: null,
+    "%": { 
         token:'%',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             math:true,
             modulus:true
         },
-        "=": { __proto__: null,
+        "=": { 
             token:'%=',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 math:true,
                 self:true,
@@ -407,15 +407,15 @@ module.exports = { __proto__: null,
 
     //comparison operators
     // == 
-    "=": { __proto__: null,
+    "=": { 
         token:'=',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             assign:true
         },
-        "=": { __proto__: null,
+        "=": { 
             token:'==',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 logic:true,
                 strict:true,
@@ -423,26 +423,26 @@ module.exports = { __proto__: null,
             }
         }
     },
-    "!": { __proto__: null,
+    "!": { 
         token:'!',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             unop:true,
             logic:true,
             not:true
         },
-        "=": { __proto__: null,
+        "=": { 
             token:'!=',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 logic:true,
                 not:true,
                 equal:true
             }
         },
-        "!": { __proto__: null,
+        "!": { 
             token:'!!',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 unop:true,
                 logic:true,
@@ -451,33 +451,33 @@ module.exports = { __proto__: null,
             }
         }
     },
-    "?": { __proto__: null,
+    "?": { 
         token:'?',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             logic:true,
             ternary:true,
             true:true
         },
-        ".": { __proto__: null,
+        ".": { 
             token:'?.',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 logic:true,
                 optional:true,
                 chain:true
             }
         },
-        "?":{ __proto__: null,
+        "?":{ 
             token:'??',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 logic:true,
                 nullish:true
             },
-            '?':{ __proto__: null,
+            '?':{ 
                 token:'??=',
-                def:{ __proto__: null,
+                def:{ 
                     symbol:true,
                     logic:true,
                     assign:true,
@@ -486,33 +486,33 @@ module.exports = { __proto__: null,
             }
         }
     },
-    ">": { __proto__: null,
+    ">": { 
         token:'>',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             greater:true,
             than:true
         },
-        "=": { __proto__: null,
+        "=": { 
             token:'>=',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 greater:true,
                 than:true,
                 equal:true
             }
         },
-        ">": { __proto__: null,
+        ">": { 
             token:'>>',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 bin:true,
                 shift:true,
                 right:true
             },
-            '>':{ __proto__: null,
+            '>':{ 
                 token:'>>>',
-                def:{ __proto__: null,
+                def:{ 
                     symbol:true,
                     bin:true,
                     unsigned:true,
@@ -522,33 +522,33 @@ module.exports = { __proto__: null,
             }
         }
     },
-    "<": { __proto__: null,
+    "<": { 
         token:'<',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             less:true,
             than:true
         },
-        "=": { __proto__: null,
+        "=": { 
             token:'<=',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 less:true,
                 than:true,
                 equal:true
             }
         },
-        "<": { __proto__: null,
+        "<": { 
             token:'<<',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 bin:true,
                 shift:true,
                 left:true
             },
-            '<': { __proto__: null,
+            '<': { 
                 token:'<<<',
-                def:{ __proto__: null,
+                def:{ 
                     symbol:true,
                     bin:true,
                     unsigned:true,
@@ -558,32 +558,32 @@ module.exports = { __proto__: null,
             }
         }
     },
-    "&": { __proto__: null,
+    "&": { 
         token:'&',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             bit:true,
             and:true
         },
-        "=": { __proto__: null,
+        "=": { 
             token:'&=',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 bit:true,
                 assign:true,
                 and:true
             }
         },
-        "&":{ __proto__: null,
+        "&":{ 
             token:'&&',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 logic:true,
                 and:true
             },
-            '=': { __proto__: null,
+            '=': { 
                 token: '&&=',
-                def:{ __proto__: null,
+                def:{ 
                     symbol:true,
                     logic:true,
                     assign:true,
@@ -593,32 +593,32 @@ module.exports = { __proto__: null,
             }
         }
     },
-    "|": { __proto__: null,
+    "|": { 
         token:'|',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             bit:true,
             or:true
         },
-        "=": { __proto__: null,
+        "=": { 
             token:'|=',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 bit:true,
                 assign:true,
                 or:true
             }
         },
-        "|": { __proto__: null,
+        "|": { 
             token:'||',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 logic:true,
                 or:true
             },
-            '=':{ __proto__: null,
+            '=':{ 
                 token:'||=',
-                def:{ __proto__: null,
+                def:{ 
                     symbol:true,
                     logic:true,
                     assign:true,
@@ -628,16 +628,16 @@ module.exports = { __proto__: null,
             }
         }
     },
-    "^": { __proto__: null,
+    "^": { 
         token:'^',
-        def:{ __proto__: null,
+        def:{ 
             symbol:true,
             bit:true,
             xor:true
         },
-        "=": { __proto__: null,
+        "=": { 
             token:'^=',
-            def:{ __proto__: null,
+            def:{ 
                 symbol:true,
                 bit:true,
                 assign:true,
@@ -648,102 +648,102 @@ module.exports = { __proto__: null,
     },
 
     //nums - because WHY NOT
-    "0": { __proto__: null,
+    "0": { 
         token:'0',
-        def:{ __proto__: null,
+        def:{ 
             bin:true,
             oct:true,
             num:true,
             hex:true
         }
     },
-    "1": { __proto__: null,
+    "1": { 
         token:'1',
-        def:{ __proto__: null,
+        def:{ 
             bin:true,
             oct:true,
             num:true,
             hex:true
         }
     },
-    "2": { __proto__: null,
+    "2": { 
         token:'2',
-        def:{ __proto__: null,
+        def:{ 
             oct:true,
             num:true,
             hex:true
         }
     },
-    "3": { __proto__: null,
+    "3": { 
         token:'3',
-        def:{ __proto__: null,
+        def:{ 
             oct:true,
             num:true,
             hex:true
         }
     },
-    "4": { __proto__: null,
+    "4": { 
         token:'4',
-        def:{ __proto__: null,
+        def:{ 
             oct:true,
             num:true,
             hex:true
         }
     },
-    "5": { __proto__: null,
+    "5": { 
         token:'5',
-        def:{ __proto__: null,
+        def:{ 
             oct:true,
             num:true,
             hex:true
         }
     },
-    "6": { __proto__: null,
+    "6": { 
         token:'6',
-        def:{ __proto__: null,
+        def:{ 
             oct:true,
             num:true,
             hex:true
         }
     },
-    "7": { __proto__: null,
+    "7": { 
         token:'7',
-        def:{ __proto__: null,
+        def:{ 
             oct:true,
             num:true,
             hex:true
         }
     },
-    "8": { __proto__: null,
+    "8": { 
         token:'8',
-        def:{ __proto__: null,
+        def:{ 
             num:true,
             hex:true
         }
     },
-    "9": { __proto__: null,
+    "9": { 
         token:'9',
-        def:{ __proto__: null,
+        def:{ 
             num:true,
             hex:true
         }
     },
 
     //brute force matching: like tokens but for words
-    a:{ __proto__: null,
+    a:{ 
         token:'a',
-        def:{ __proto__: null,
+        def:{ 
             letter:true,
             hex:true
         },
-        r:{ __proto__: null,
+        r:{ 
             token:'ar',
-            def:{ __proto__: null,
+            def:{ 
                 letter:true
             },
-            r:{ __proto__: null,
+            r:{ 
                 token:'arr',
-                def:{ __proto__: null,
+                def:{ 
                     res:true,
                     type:true,
                     assign:true,
@@ -752,29 +752,29 @@ module.exports = { __proto__: null,
             }
         }
     },
-    A:{ __proto__: null,
+    A:{ 
         token:'A',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        r:{ __proto__: null,
+        r:{ 
             token:'Ar',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            r:{ __proto__: null,
+            r:{ 
                 token:'Arr',
-                def:{ __proto__: null,
+                def:{ 
                     res:true,
                     typeof:true,
                     assign:true,
                     arr:true
                 },
-                '{ __proto__: null,':{ __proto__: null,
+                '{ ':{ 
                     error:'SyntaxError: Malformed token, expected \'}\' after "Arr"',
-                    '}':{ __proto__: null,
-                        token:'Arr{ __proto__: null,}',
-                        def:{ __proto__: null,
+                    '}':{ 
+                        token:'Arr{ }',
+                        def:{ 
                             res:true,
                             typeof:true,
                             Arr:true,
@@ -783,11 +783,11 @@ module.exports = { __proto__: null,
                         }
                     }
                 },
-                '[':{ __proto__: null,
+                '[':{ 
                     error:'SyntaxError: Malformed token, expected \']\' after "Arr"',
-                    ']':{ __proto__: null,
+                    ']':{ 
                         token:'Arr[]',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             typeof:true,
                             Arr:true,
@@ -796,11 +796,11 @@ module.exports = { __proto__: null,
                         }
                     }
                 },
-                '(':{ __proto__: null,
+                '(':{ 
                     error:'SyntaxError: Malformed token, expected \')\' after "Arr"',
-                    ')':{ __proto__: null,
+                    ')':{ 
                         token:'Arr()',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             typeof:true,
                             Arr:true,
@@ -812,20 +812,20 @@ module.exports = { __proto__: null,
             }
         }
     },
-    b:{ __proto__: null,
+    b:{ 
         token:'b',
-        def:{ __proto__: null,
+        def:{ 
             letter:true,
             hex:true
         },
-        i:{ __proto__: null,
+        i:{ 
             token:'bi',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            n: { __proto__: null,
+            n: { 
                 token:'bin',
-                def:{ __proto__: null,
+                def:{ 
                     res:true,
                     type:true,
                     assign:true,
@@ -834,19 +834,19 @@ module.exports = { __proto__: null,
                 }
             }
         },
-        o:{ __proto__: null,
+        o:{ 
             token:'bo',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            o:{ __proto__: null,
+            o:{ 
                 token:'boo',
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                l:{ __proto__: null,
+                l:{ 
                     token:'bool',
-                    def:{ __proto__: null,
+                    def:{ 
                         res:true,
                         type:true,
                         assign:true,
@@ -855,24 +855,24 @@ module.exports = { __proto__: null,
                 }
             }
         },
-        r:{ __proto__: null,
+        r:{ 
             token:'br',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            e:{ __proto__: null,
+            e:{ 
                 token:'bre',
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                a:{ __proto__: null,
+                a:{ 
                     token:'brea',
-                    def:{ __proto__: null,
+                    def:{ 
                         char:true
                     },
-                    k:{ __proto__: null,
+                    k:{ 
                         token:'break',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             scope:true,
                             loop:true,
@@ -884,29 +884,29 @@ module.exports = { __proto__: null,
             }
         }
     },
-    B:{ __proto__: null,
+    B:{ 
         token:'B',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        i:{ __proto__: null,
+        i:{ 
             token:'Bi',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            n: { __proto__: null,
+            n: { 
                 token:'Bin',
-                def:{ __proto__: null,
+                def:{ 
                     res:true,
                     typeof:true,
                     Bin:true,
                     Binary:true
                 },
-                '{ __proto__: null,':{ __proto__: null,
+                '{ ':{ 
                     error:'SyntaxError: Malformed token, expected \'}\' after "Bin"',
-                    '}':{ __proto__: null,
-                        token:'Bin{ __proto__: null,}',
-                        def:{ __proto__: null,
+                    '}':{ 
+                        token:'Bin{ }',
+                        def:{ 
                             res:true,
                             typeof:true,
                             Bin:true,
@@ -915,11 +915,11 @@ module.exports = { __proto__: null,
                         }
                     }
                 },
-                '[':{ __proto__: null,
+                '[':{ 
                     error:'SyntaxError: Malformed token, expected \']\' after "Bin"',
-                    ']':{ __proto__: null,
+                    ']':{ 
                         token:'Bin[]',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             typeof:true,
                             Bin:true,
@@ -928,11 +928,11 @@ module.exports = { __proto__: null,
                         }
                     }
                 },
-                '(':{ __proto__: null,
+                '(':{ 
                     error:'SyntaxError: Malformed token, expected \')\' after "Bin"',
-                    ')':{ __proto__: null,
+                    ')':{ 
                         token:'Bin()',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             typeof:true,
                             Bin:true,
@@ -942,29 +942,29 @@ module.exports = { __proto__: null,
                     }
                 }
             }},
-        o:{ __proto__: null,
+        o:{ 
             token:'Bo',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            o:{ __proto__: null,
+            o:{ 
                 token:'Boo',
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                l:{ __proto__: null,
+                l:{ 
                     token:'Bool',
-                    def:{ __proto__: null,
+                    def:{ 
                         res:true,
                         typeof:true,
                         Bool:true,
                         Boolean:true
                     },
-                    '{ __proto__: null,':{ __proto__: null,
+                    '{ ':{ 
                         error:'SyntaxError: Malformed token, expected \'}\' after "Bool"',
-                        '}':{ __proto__: null,
-                            token:'Bool{ __proto__: null,}',
-                            def:{ __proto__: null,
+                        '}':{ 
+                            token:'Bool{ }',
+                            def:{ 
                                 res:true,
                                 typeof:true,
                                 Bool:true,
@@ -973,11 +973,11 @@ module.exports = { __proto__: null,
                             }
                         }
                     },
-                    '[':{ __proto__: null,
+                    '[':{ 
                         error:'SyntaxError: Malformed token, expected \']\' after "Bool"',
-                        ']':{ __proto__: null,
+                        ']':{ 
                             token:'Bool[]',
-                            def:{ __proto__: null,
+                            def:{ 
                                 res:true,
                                 typeof:true,
                                 Bool:true,
@@ -986,11 +986,11 @@ module.exports = { __proto__: null,
                             }
                         }
                     },
-                    '(':{ __proto__: null,
+                    '(':{ 
                         error:'SyntaxError: Malformed token, expected \')\' after "Bool"',
-                        ')':{ __proto__: null,
+                        ')':{ 
                             token:'Bool()',
-                            def:{ __proto__: null,
+                            def:{ 
                                 res:true,
                                 typeof:true,
                                 Bool:true,
@@ -1003,30 +1003,30 @@ module.exports = { __proto__: null,
             }
         }
     },
-    c:{ __proto__: null,
+    c:{ 
         token:'c',
-        def:{ __proto__: null,
+        def:{ 
             letter:true,
             hex:true
         },
-        o:{ __proto__: null,
+        o:{ 
             token:'co',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            n:{ __proto__: null,
+            n:{ 
                 token:"con",
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                s:{ __proto__: null,
+                s:{ 
                     token:'cons',
-                    def:{ __proto__: null,
+                    def:{ 
                         char:true
                     },
-                    t:{ __proto__: null,
+                    t:{ 
                         token:'const',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             type:true,
                             assign:true,
@@ -1034,29 +1034,29 @@ module.exports = { __proto__: null,
                         }
                     }
                 },
-                t:{ __proto__: null,
+                t:{ 
                     token:'cont',
-                    def:{ __proto__: null,
+                    def:{ 
                         char:true
                     },
-                    i:{ __proto__: null,
+                    i:{ 
                         token:'conti',
-                        def:{ __proto__: null,
+                        def:{ 
                             char:true
                         },
-                        n:{ __proto__: null,
+                        n:{ 
                             token:'contin',
-                            def:{ __proto__: null,
+                            def:{ 
                                 char:true
                             },
-                            u:{ __proto__: null,
+                            u:{ 
                                 token:'continu',
-                                def:{ __proto__: null,
+                                def:{ 
                                     char:true
                                 },
-                                e: { __proto__: null,
+                                e: { 
                                     token:'continue',
-                                    def:{ __proto__: null,
+                                    def:{ 
                                         res:true,
                                         scope:true,
                                         loop:true,
@@ -1070,38 +1070,38 @@ module.exports = { __proto__: null,
             }            
         }
     },
-    C:{ __proto__: null,
+    C:{ 
         token:'C',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        o:{ __proto__: null,
+        o:{ 
             token:'Co',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            n:{ __proto__: null,
+            n:{ 
                 token:"Con",
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                s:{ __proto__: null,
+                s:{ 
                     token:'Cons',
-                    def:{ __proto__: null,
+                    def:{ 
                         char:true
                     },
-                    t:{ __proto__: null,
+                    t:{ 
                         token:'Const',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             type:true,
                             const:true
                         },
-                        '{ __proto__: null,':{ __proto__: null,
+                        '{ ':{ 
                             error:'SyntaxError: Malformed token, expected \'}\' after "Const"',
-                            '}':{ __proto__: null,
-                                token:'Const{ __proto__: null,}',
-                                def:{ __proto__: null,
+                            '}':{ 
+                                token:'Const{ }',
+                                def:{ 
                                     res:true,
                                     type:true,
                                     const:true,
@@ -1109,11 +1109,11 @@ module.exports = { __proto__: null,
                                 }
                             }
                         },
-                        '[':{ __proto__: null,
+                        '[':{ 
                             error:'SyntaxError: Malformed token, expected \']\' after "Const"',
-                            ']':{ __proto__: null,
+                            ']':{ 
                                 token:'Const[]',
-                                def:{ __proto__: null,
+                                def:{ 
                                     res:true,
                                     type:true,
                                     const:true,
@@ -1121,11 +1121,11 @@ module.exports = { __proto__: null,
                                 }
                             }
                         },
-                        '(':{ __proto__: null,
+                        '(':{ 
                             error:'SyntaxError: Malformed token, expected \')\' after "Const"',
-                            ')':{ __proto__: null,
+                            ')':{ 
                                 token:'Const()',
-                                def:{ __proto__: null,
+                                def:{ 
                                     res:true,
                                     type:true,
                                     const:true,
@@ -1138,32 +1138,32 @@ module.exports = { __proto__: null,
             }
         }
     },
-    d:{ __proto__: null,
+    d:{ 
         token:'d',
-        def:{ __proto__: null,
+        def:{ 
             letter:true,
             hex:true
         }
     },
-    e:{ __proto__: null,
+    e:{ 
         token:'e',
-        def:{ __proto__: null,
+        def:{ 
             letter:true,
             hex:true
         },
-        l:{ __proto__: null,
+        l:{ 
             token:'el',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            s:{ __proto__: null,
+            s:{ 
                 token:'els',
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                e:{ __proto__: null,
+                e:{ 
                     token:'else',
-                    def:{ __proto__: null,
+                    def:{ 
                         res:true,
                         statement:true,
                         scope:true,
@@ -1174,29 +1174,29 @@ module.exports = { __proto__: null,
                 }
             }
         },
-        x:{ __proto__: null,
+        x:{ 
             token:'ex',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            p:{ __proto__: null,
+            p:{ 
                 token:'exp',
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                o:{ __proto__: null,
+                o:{ 
                     token:'expo',
-                    def:{ __proto__: null,
+                    def:{ 
                         char:true
                     },
-                    r:{ __proto__: null,
+                    r:{ 
                         token:'expor',
-                        def:{ __proto__: null,
+                        def:{ 
                             char:true
                         },
-                        t:{ __proto__: null,
+                        t:{ 
                             token:'export',
-                            def:{ __proto__: null,
+                            def:{ 
                                 res:true,
                                 type:true,
                                 module:true,
@@ -1208,30 +1208,30 @@ module.exports = { __proto__: null,
             }
         }
     },
-    f:{ __proto__: null,
+    f:{ 
         token:'f',
-        def:{ __proto__: null,
+        def:{ 
             letter:true,
             hex:true
         },
-        a:{ __proto__: null,
+        a:{ 
             token:'fa',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            l:{ __proto__: null,
+            l:{ 
                 token:'fal',
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                s:{ __proto__: null,
+                s:{ 
                     token:'fals',
-                    def:{ __proto__: null,
+                    def:{ 
                         char:true
                     },
-                    e:{ __proto__: null,
+                    e:{ 
                         token:'false',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             value:true,
                             bool:true,
@@ -1241,9 +1241,9 @@ module.exports = { __proto__: null,
                 }
             }
         },
-        n:{ __proto__: null,
+        n:{ 
             token:'fn',
-            def:{ __proto__: null,
+            def:{ 
                 res:true,
                 type:true,
                 assign:true,
@@ -1251,14 +1251,14 @@ module.exports = { __proto__: null,
             }
         }
     },
-    F:{ __proto__: null,
+    F:{ 
         token:'F',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        n:{ __proto__: null,
+        n:{ 
             token:'Fn',
-            def:{ __proto__: null,
+            def:{ 
                 res:true,
                 typeof:true,
                 Fn:true,
@@ -1266,19 +1266,19 @@ module.exports = { __proto__: null,
             }
         }
     },
-    h:{ __proto__: null,
+    h:{ 
         token:'h',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        e:{ __proto__: null,
+        e:{ 
             token:'he',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            x:{ __proto__: null,
+            x:{ 
                 token:'hex',
-                def:{ __proto__: null,
+                def:{ 
                     res:true,
                     type:true,
                     assign:true,
@@ -1288,14 +1288,14 @@ module.exports = { __proto__: null,
             }
         }
     },
-    i:{ __proto__: null,
+    i:{ 
         token:'i',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        f:{ __proto__: null,
+        f:{ 
             token:'if',
-            def:{ __proto__: null,
+            def:{ 
                 res:true,
                 scope:true,
                 bool:true,
@@ -1303,37 +1303,37 @@ module.exports = { __proto__: null,
                 if:true
             }
         },
-        n:{ __proto__: null,
+        n:{ 
             token:'in',
-            def:{ __proto__: null,
+            def:{ 
                 res:true,
                 scope:true,
                 in:true
             }
         },
-        m:{ __proto__: null,
+        m:{ 
             token:'im',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            p:{ __proto__: null,
+            p:{ 
                 token:'imp',
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                o:{ __proto__: null,
+                o:{ 
                     token:'impo',
-                    def:{ __proto__: null,
+                    def:{ 
                         char:true
                     },
-                    r:{ __proto__: null,
+                    r:{ 
                         token:'impor',
-                        def:{ __proto__: null,
+                        def:{ 
                             char:true
                         },
-                        t:{ __proto__: null,
+                        t:{ 
                             token:'import',
-                            def:{ __proto__: null,
+                            def:{ 
                                 res:true,
                                 type:true,
                                 module:true,
@@ -1345,19 +1345,19 @@ module.exports = { __proto__: null,
             }
         }
     },
-    n:{ __proto__: null,
+    n:{ 
         token:'n',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        u:{ __proto__: null,
+        u:{ 
             token:'nu',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            m: { __proto__: null,
+            m: { 
                 token:'num',
-                def:{ __proto__: null,
+                def:{ 
                     res:true,
                     type:true,
                     assign:true,
@@ -1366,19 +1366,19 @@ module.exports = { __proto__: null,
             }
         }
     },
-    o:{ __proto__: null,
+    o:{ 
         token:'o',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        b:{ __proto__: null,
+        b:{ 
             token:'ob',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            j: { __proto__: null,
+            j: { 
                 token:'obj',
-                def:{ __proto__: null,
+                def:{ 
                     res:true,
                     type:true,
                     assign:true,
@@ -1386,14 +1386,14 @@ module.exports = { __proto__: null,
                 }
             }
         },
-        c:{ __proto__: null,
+        c:{ 
             token:'oc',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            t: { __proto__: null,
+            t: { 
                 token:'oct',
-                def:{ __proto__: null,
+                def:{ 
                     res:true,
                     type:true,
                     assign:true,
@@ -1402,38 +1402,38 @@ module.exports = { __proto__: null,
                 }
             }
         },
-        f: { __proto__: null,
+        f: { 
             token:'of',
-            def:{ __proto__: null,
+            def:{ 
                 res:true,
                 scope:true,
                 of:true
             }
         }
     },
-    O:{ __proto__: null,
+    O:{ 
         token:'O',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        c:{ __proto__: null,
+        c:{ 
             token:'Oc',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            t:{ __proto__: null,
+            t:{ 
                 token:'Oct',
-                def:{ __proto__: null,
+                def:{ 
                     res:true,
                     typeof:true,
                     Oct:true,
                     Octal:true
                 },
-                '{ __proto__: null,':{ __proto__: null,
+                '{ ':{ 
                     error:'SyntaxError: Malformed token, expected \'}\' after "Oct"',
-                    '}':{ __proto__: null,
-                        token:'Oct{ __proto__: null,}',
-                        def:{ __proto__: null,
+                    '}':{ 
+                        token:'Oct{ }',
+                        def:{ 
                             res:true,
                             typeof:true,
                             Oct:true,
@@ -1442,11 +1442,11 @@ module.exports = { __proto__: null,
                         }
                     }
                 },
-                '[':{ __proto__: null,
+                '[':{ 
                     error:'SyntaxError: Malformed token, expected \']\' after "Oct"',
-                    ']':{ __proto__: null,
+                    ']':{ 
                         token:'Oct[]',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             typeof:true,
                             Oct:true,
@@ -1455,11 +1455,11 @@ module.exports = { __proto__: null,
                         }
                     }
                 },
-                '(':{ __proto__: null,
+                '(':{ 
                     error:'SyntaxError: Malformed token, expected \')\' after "Oct"',
-                    ')':{ __proto__: null,
+                    ')':{ 
                         token:'Oct()',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             typeof:true,
                             Oct:true,
@@ -1470,24 +1470,24 @@ module.exports = { __proto__: null,
                 }
             }
         },
-        b:{ __proto__: null,
+        b:{ 
             token:'Ob',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            j:{ __proto__: null,
+            j:{ 
                 token:'Obj',
-                def:{ __proto__: null,
+                def:{ 
                     res:true,
                     typeof:true,
                     Obj:true,
                     Object:true
                 },
-                '{ __proto__: null,':{ __proto__: null,
+                '{ ':{ 
                     error:'SyntaxError: Malformed token, expected \'}\' after "Obj"',
-                    '}':{ __proto__: null,
-                        token:'Obj{ __proto__: null,}',
-                        def:{ __proto__: null,
+                    '}':{ 
+                        token:'Obj{ }',
+                        def:{ 
                             res:true,
                             typeof:true,
                             Obj:true,
@@ -1496,11 +1496,11 @@ module.exports = { __proto__: null,
                         }
                     }
                 },
-                '[':{ __proto__: null,
+                '[':{ 
                     error:'SyntaxError: Malformed token, expected \']\' after "Obj"',
-                    ']':{ __proto__: null,
+                    ']':{ 
                         token:'Obj[]',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             typeof:true,
                             Obj:true,
@@ -1509,11 +1509,11 @@ module.exports = { __proto__: null,
                         }
                     }
                 },
-                '(':{ __proto__: null,
+                '(':{ 
                     error:'SyntaxError: Malformed token, expected \')\' after "Obj"',
-                    ')':{ __proto__: null,
+                    ')':{ 
                         token:'Obj()',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             typeof:true,
                             Obj:true,
@@ -1525,34 +1525,34 @@ module.exports = { __proto__: null,
             }
         }
     },
-    r:{ __proto__: null,
+    r:{ 
         token:'r',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        e:{ __proto__: null,
+        e:{ 
             token:'re',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            t:{ __proto__: null,
+            t:{ 
                 token:'ret',
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                u:{ __proto__: null,
+                u:{ 
                     token:'retu',
-                    def:{ __proto__: null,
+                    def:{ 
                         char:true
                     },
-                    r:{ __proto__: null,
+                    r:{ 
                         token:'retur',
-                        def:{ __proto__: null,
+                        def:{ 
                             char:true
                         },
-                        n:{ __proto__: null,
+                        n:{ 
                             token:'return',
-                            def:{ __proto__: null,
+                            def:{ 
                                 res:true,
                                 scope:true,
                                 exit:true,
@@ -1564,19 +1564,19 @@ module.exports = { __proto__: null,
             }
         }
     },
-    s:{ __proto__: null,
+    s:{ 
         token:'s',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        t:{ __proto__: null,
+        t:{ 
             token:'st',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            r: { __proto__: null,
+            r: { 
                 token:'str',
-                def:{ __proto__: null,
+                def:{ 
                     res:true,
                     type:true,
                     assign:true,
@@ -1585,29 +1585,29 @@ module.exports = { __proto__: null,
             }
         }
     },
-    S:{ __proto__: null,
+    S:{ 
         token:'S',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        t:{ __proto__: null,
+        t:{ 
             token:'St',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            r:{ __proto__: null,
+            r:{ 
                 token:'Str',
-                def:{ __proto__: null,
+                def:{ 
                     res:true,
                     typeof:true,
                     Str:true,
                     String:true
                 },
-                '{ __proto__: null,':{ __proto__: null,
+                '{ ':{ 
                     error:'SyntaxError: Malformed token, expected \'}\' after "Str"',
-                    '}':{ __proto__: null,
-                        token:'Str{ __proto__: null,}',
-                        def:{ __proto__: null,
+                    '}':{ 
+                        token:'Str{ }',
+                        def:{ 
                             res:true,
                             typeof:true,
                             Str:true,
@@ -1616,11 +1616,11 @@ module.exports = { __proto__: null,
                         }
                     }
                 },
-                '[':{ __proto__: null,
+                '[':{ 
                     error:'SyntaxError: Malformed token, expected \']\' after "Str"',
-                    ']':{ __proto__: null,
+                    ']':{ 
                         token:'Str[]',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             typeof:true,
                             Str:true,
@@ -1629,11 +1629,11 @@ module.exports = { __proto__: null,
                         }
                     }
                 },
-                '(':{ __proto__: null,
+                '(':{ 
                     error:'SyntaxError: Malformed token, expected \')\' after "Str"',
-                    ')':{ __proto__: null,
+                    ')':{ 
                         token:'Str()',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             typeof:true,
                             Str:true,
@@ -1645,24 +1645,24 @@ module.exports = { __proto__: null,
             }
         }
     },
-    t:{ __proto__: null,
+    t:{ 
         token:'t',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        r:{ __proto__: null,
+        r:{ 
             token:'tr',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            u:{ __proto__: null,
+            u:{ 
                 token:'tru',
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                e:{ __proto__: null,
+                e:{ 
                     token:'true',
-                    def:{ __proto__: null,
+                    def:{ 
                         res:true,
                         value:true,
                         bool:true,
@@ -1671,19 +1671,19 @@ module.exports = { __proto__: null,
                 }
             }
         },
-        y:{ __proto__: null,
+        y:{ 
             token:'ty',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            p:{ __proto__: null,
+            p:{ 
                 token:'typ',
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                e:{ __proto__: null,
+                e:{ 
                     token:'type',
-                    def:{ __proto__: null,
+                    def:{ 
                         res:true,
                         type:true,
                         assign:true,
@@ -1693,24 +1693,24 @@ module.exports = { __proto__: null,
             }
         }
     },
-    v:{ __proto__: null,
+    v:{ 
         token:'v',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        o:{ __proto__: null,
+        o:{ 
             token:'vo',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            i:{ __proto__: null,
+            i:{ 
                 token:'voi',
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                d: { __proto__: null,
+                d: { 
                     token:'void',
-                    def:{ __proto__: null,
+                    def:{ 
                         res:true,
                         type:true,
                         assign:true,
@@ -1720,29 +1720,29 @@ module.exports = { __proto__: null,
             }
         }
     },
-    w:{ __proto__: null,
+    w:{ 
         token:'w',
-        def:{ __proto__: null,
+        def:{ 
             char:true
         },
-        h:{ __proto__: null,
+        h:{ 
             token:'wh',
-            def:{ __proto__: null,
+            def:{ 
                 char:true
             },
-            i:{ __proto__: null,
+            i:{ 
                 token:'whi',
-                def:{ __proto__: null,
+                def:{ 
                     char:true
                 },
-                l:{ __proto__: null,
+                l:{ 
                     token:'whil',
-                    def:{ __proto__: null,
+                    def:{ 
                         char:true
                     },
-                    e: { __proto__: null,
+                    e: { 
                         token:'while',
-                        def:{ __proto__: null,
+                        def:{ 
                             res:true,
                             statement:true,
                             scope:true,
