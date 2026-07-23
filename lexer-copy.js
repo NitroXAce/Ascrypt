@@ -1,4 +1,5 @@
 function TokenMaker(that, token, def, ln, pos){
+    this.__proto__ = null;
     this.token = token || that.obj.token || '';
     this.def = def || that.obj.def || {char:true};
     this.ln = ln || that.ln;
@@ -6,6 +7,7 @@ function TokenMaker(that, token, def, ln, pos){
 }
 
 function CleanProto(value){
+    this.__proto__ = null;
     if (typeof value === 'boolean'){
         this.result = new Boolean(value);
         this.result.__proto__ = null;
@@ -16,6 +18,7 @@ function CleanProto(value){
 }
 
 function KeepOnly(that,mod){
+    this.__proto__ = null;
     this.result = {};
 
     if (mod.length === 0)
@@ -52,11 +55,13 @@ function AssignmentError(that,message){
 }
 
 function EOFError() {
+    this.__proto__ = null;
     this.message = 'Unexpected end of file';
     throw new Error(this.message);
 }
 
 function PureObjStrip(obj, omit){
+    this.__proto__ = null;
     this.result = {};
     this.result = JSON.parse(JSON.stringify(obj), function(key, value){
         if(typeof key === 'object' && key !== omit)
@@ -66,10 +71,10 @@ function PureObjStrip(obj, omit){
 }
 
 function CharLexer(src){
+    this.__proto__ = null;
     this.src = (src || "").split('');
-    this.tokenize = require('./tokenizer-copy.js')
-    this.tokenizer = new PureObjStrip(this.tokenize,'types').result;
-    this.types = this.tokenize.types;
+    this.tokenizer = require('./tokenizer-copy.js')
+    this.types = this.tokenizer.types;
     this.end = this.src.length;
 
     this.obj = this.tokenizer;
@@ -99,7 +104,10 @@ function CharLexer(src){
                 this.obj.def.newline ? ++this.ln : this.ln,
                 this.obj.def.newline ? (this.pos = 1, this.pos) : this.pos - (this.obj.token || this.char).length + 1
             ));
-        } else this.buffer.push(new TokenMaker(this, this.char, {char:true}));
+        } else this.buffer.push(new TokenMaker(this, this.char, {
+            __proto__: null,
+            char:true
+        }));
 
         //gather token definitions
         this.obj = this.tokenizer;
@@ -130,7 +138,7 @@ function CharLexer(src){
                     this.curr.def.close &&
                     this.curr.def.comment &&
                     this.prev.def.open
-                )) this.buffer[this.buffer.length - 2].def += '-complete';
+                )) this.buffer[this.buffer.length - 2].def.complete=true;
                 
                 //if still in comment, condense token and continue
                 this.buffer[this.buffer.length - 2].token += this.curr.token;
@@ -194,6 +202,7 @@ function CharLexer(src){
                         this.curr.token,
                         //'identifier-' + this.types[this.type]
                         new (function ReturnObj(type){
+                            this.__proto__ = null;
                             this.identifier = true;
                             this[type] = true;
                         })(this.types[this.type])

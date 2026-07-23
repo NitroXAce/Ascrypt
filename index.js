@@ -9,8 +9,6 @@ var
 //console.log(JSON.stringify(new CharLexer(inputStr)));
 //new CharLexer(inputStr);
 
-console.log(JSON.stringify(tokensCopy));
-
-console.log(JSON.stringify(new CharLexerCopy(inputStr)));
+console.log(new CharLexerCopy(inputStr));
 
 console.log(process.memoryUsage().heapUsed);
