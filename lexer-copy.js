@@ -73,6 +73,7 @@ function PureObjStrip(obj, omit){
 function CharLexer(src){
     this.__proto__ = null;
     this.src = (src || "").split('');
+    this.src.__proto__ = null;
     this.tokenizer = require('./tokenizer-copy.js')
     this.types = this.tokenizer.types;
     this.end = this.src.length;
@@ -80,6 +81,7 @@ function CharLexer(src){
     this.obj = this.tokenizer;
     this.buffer = [];
     this.scope = [];
+    this.typeScope = [];
 
     this.i = -1;
     this.ln = 1;
@@ -171,7 +173,7 @@ function CharLexer(src){
         // NOW WE CHECK TOKENS BELOW -------------------------------------------------
 
         //handling types based on identifier context
-        if (this.prev.def.type) {
+        if (this.prev.def.type || this.prev.token === ',') {
             
             if((
                 this.curr.def.res ||
