@@ -56,10 +56,20 @@ function EOFError() {
     throw new Error(this.message);
 }
 
+function PureObjStrip(obj, omit){
+    this.result = {};
+    this.result = JSON.parse(JSON.stringify(obj), function(key, value){
+        if(typeof key === 'object' && key !== omit)
+            key.__proto__ = null;
+    });
+    return this.result;
+}
+
 function CharLexer(src){
     this.src = (src || "").split('');
-    this.tokenizer = require('./tokenizer-copy.js');
-    this.types = this.tokenizer.types;
+    this.tokenize = require('./tokenizer-copy.js')
+    this.tokenizer = new PureObjStrip(this.tokenize,'types').result;
+    this.types = this.tokenize.types;
     this.end = this.src.length;
 
     this.obj = this.tokenizer;
@@ -89,9 +99,7 @@ function CharLexer(src){
                 this.obj.def.newline ? ++this.ln : this.ln,
                 this.obj.def.newline ? (this.pos = 1, this.pos) : this.pos - (this.obj.token || this.char).length + 1
             ));
-        } else {
-            this.buffer.push(new TokenMaker(this, this.char, {char:true}));
-        }
+        } else this.buffer.push(new TokenMaker(this, this.char, {char:true}));
 
         //gather token definitions
         this.obj = this.tokenizer;
@@ -99,10 +107,9 @@ function CharLexer(src){
         this.prev = this.buffer[this.buffer.length-2];
 
         // Force comment mode persistence
-        if (this.prev && this.prev.def.comment && !this.prev.def.complete) {
+        if (this.prev && this.prev.def.comment && !this.prev.def.complete)
             // Keep previous token in comment mode
             this.prev.def.open = true;   // helps the next iteration detect it
-        }
         
 
         // Skip if theres no previous token to compare to
@@ -112,30 +119,33 @@ function CharLexer(src){
         if (!this.prev.def.complete) {
 
             // COMMENT HANDLING
-            if (this.prev.def.comment) {
-
-                // Mark as complete when we hit the closer
-                if (this.curr.def.close && this.curr.def.comment && this.prev.def.open) {
-                    this.buffer[this.buffer.length - 2].def.complete = true;
-                }
-
-                // Always append to the comment token (this is the key part that was missing)
+            if(this.prev.def.comment){
+                //continual comment handling, if line comment, til newline, if block comment, til close
+                if((
+                    //line comment til newline
+                    this.curr.def.newline &&
+                    this.prev.def.unop
+                ) || (
+                    //block comment til
+                    this.curr.def.close &&
+                    this.curr.def.comment &&
+                    this.prev.def.open
+                )) this.buffer[this.buffer.length - 2].def += '-complete';
+                
+                //if still in comment, condense token and continue
                 this.buffer[this.buffer.length - 2].token += this.curr.token;
                 this.buffer.length -= 1;
 
-                // Clean up the closing token if comment is now complete
-                if (this.buffer[this.buffer.length - 1]?.def?.complete) {
+                if(this.prev.def.complete)
                     this.buffer.length -= 1;
-                }
-
-                continue;
+                if(this.nextChar) continue;
+                else throw new EOFError();
             }
 
             // STRING HANDLING
             if (this.prev.def.quote) {
-                if (this.prev.def === this.curr.def) {           // closing quote
+                if (this.prev.def === this.curr.def)          // closing quote
                     this.buffer[this.buffer.length - 2].def.complete = true;
-                }
 
                 this.buffer[this.buffer.length - 2].token += this.curr.token;
                 this.buffer.length -= 1;
