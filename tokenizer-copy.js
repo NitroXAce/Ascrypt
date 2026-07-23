@@ -375,7 +375,8 @@ module.exports = {
                 symbol:true,
                 unop:true,
                 line:true,
-                comment:true
+                comment:true,
+                open:true
             }
         },
         "*": { 

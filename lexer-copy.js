@@ -81,11 +81,16 @@ function CharLexer(src){
 
             // COMMENT HANDLING
             if(this.prev.def.comment){
-                //continual comment handling, if line comment, til newline, if block comment, til close
+                //continual comment handling
+                // if line comment, til newline
+                // if block comment, til close
                 if((
                     //line comment til newline
-                    this.curr.def.newline &&
-                    this.prev.def.unop
+                    this.prev.def.unop && (
+                        this.nextChar === '\n' ||
+                        this.nextChar === "\r" ||
+                        this.i === this.end - 1
+                    )
                 ) || (
                     //block comment til
                     this.curr.def.close &&
@@ -97,10 +102,9 @@ function CharLexer(src){
                 this.buffer[this.buffer.length - 2].token += this.curr.token;
                 this.buffer.length -= 1;
 
-                if(this.prev.def.complete)
-                    this.buffer.length -= 1;
-                if(this.nextChar) continue;
-                else throw new EOFError();
+                /*if(this.prev.def.complete)
+                    this.buffer.length -= 1;*/
+                continue;
             }
 
             // STRING HANDLING

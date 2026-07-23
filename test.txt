@@ -1,0 +1,9 @@
+//this is a code line!
+
+//this is yet another one!
+
+/*
+    This is a code block
+*/
+
+str scream = 'I have a mouth, but I don\'t scream!'
